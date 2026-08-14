@@ -2,9 +2,6 @@ const domain = import.meta.env.PUBLIC_SHOPIFY_DOMAIN;
 const token = import.meta.env.PUBLIC_SHOPIFY_STOREFRONT_TOKEN;
 const endpoint = `https://${domain}/api/2025-01/graphql.json`;
 
-// Gedeelde helper: elke Shopify-call (producten ophalen, straks ook cart-acties)
-// loopt hierdoorheen. Zo staat foutafhandeling en de header-opzet op één plek
-// in plaats van dat we het in elke functie apart herhalen.
 async function shopifyFetch(query, variables = {}) {
   const response = await fetch(endpoint, {
     method: 'POST',

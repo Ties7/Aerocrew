@@ -1,0 +1,15 @@
+---
+import { getAllProducts, getProductByHandle } from '../../lib/shopify.js';
+
+export async function getStaticPaths() {
+  const products = await getAllProducts();
+  return products.map((product) => ({
+    params: { handle: product.handle },
+  }));
+}
+
+const { handle } = Astro.params;
+const product = await getProductByHandle(handle);
+---
+<h1>Productdetail</h1>
+<pre>{JSON.stringify(product, null, 2)}</pre>

@@ -1,0 +1,6 @@
+---
+import { getAllProducts } from '../../lib/shopify.js';
+const products = await getAllProducts();
+---
+<h1>Productoverzicht</h1>
+<pre>{JSON.stringify(products, null, 2)}</pre>

@@ -8,8 +8,10 @@ const products = await getAllProducts();
   <div class="product-grid">
     {products.map((product) => (
       <a href={`/products/${product.handle}`} class="product-card">
-        {product.featuredImage && (
+        {product.featuredImage ? (
           <img src={product.featuredImage.url} alt={product.featuredImage.altText ?? product.title} />
+        ) : (
+          <div class="product-image-placeholder">?</div>
         )}
         <h2>{product.title}</h2>
         <p>{product.priceRange.minVariantPrice.amount} {product.priceRange.minVariantPrice.currencyCode}</p>

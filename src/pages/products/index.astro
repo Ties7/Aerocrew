@@ -1,6 +1,38 @@
 ---
+import Layout from '../../layouts/layout.astro';
 import { getAllProducts } from '../../lib/shopify.js';
 const products = await getAllProducts();
 ---
-<h1>Productoverzicht</h1>
-<pre>{JSON.stringify(products, null, 2)}</pre>
+<Layout title="Productoverzicht">
+  <h1>Productoverzicht</h1>
+    <ul class="product-grid">
+        {products.map((product) => (
+            <li>
+                <a href={`/products/${product.handle}`} class="product-card">
+                    {product.featuredImage ? (
+                    <img src={product.featuredImage.url} alt={product.featuredImage.altText ?? product.title} />
+                    ) : (
+                    <div class="product-image-placeholder" role="img" aria-label="Geen afbeelding beschikbaar">?</div>
+                    )}
+                    <h2>{product.title}</h2>
+                    <p>{product.priceRange.minVariantPrice.amount} {product.priceRange.minVariantPrice.currencyCode}</p>
+                </a>
+            </li>
+        ))}
+    </ul>
+</Layout>
+
+<style>
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+    list-style: none;
+    padding: 0;
+  }
+
+  .product-card {
+    text-decoration: none;
+    color: inherit;
+  }
+</style>

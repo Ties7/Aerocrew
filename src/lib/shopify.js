@@ -56,11 +56,22 @@ export async function createCart(merchandiseId, quantity = 1) {
           id
           checkoutUrl
         }
+        userErrors {
+          field
+          message
+        }
       }
     }
   `;
+
   const data = await shopifyFetch(query, { lines: [{ merchandiseId, quantity }] });
-  return data.cartCreate.cart;
+  const { cart, userErrors } = data.cartCreate;
+
+  if (userErrors.length > 0) {
+    throw new Error(userErrors.map((e) => e.message).join(', '));
+  }
+
+  return cart;
 }
 
 export async function addCartLine(cartId, merchandiseId, quantity = 1) {
@@ -71,9 +82,20 @@ export async function addCartLine(cartId, merchandiseId, quantity = 1) {
           id
           checkoutUrl
         }
+        userErrors {
+          field
+          message
+        }
       }
     }
   `;
+
   const data = await shopifyFetch(query, { cartId, lines: [{ merchandiseId, quantity }] });
-  return data.cartLinesAdd.cart;
+  const { cart, userErrors } = data.cartLinesAdd;
+
+  if (userErrors.length > 0) {
+    throw new Error(userErrors.map((e) => e.message).join(', '));
+  }
+
+  return cart;
 }

@@ -47,3 +47,33 @@ export async function getAllProducts() {
   const data = await shopifyFetch(query);
   return data.products.nodes;
 }
+
+export async function createCart(merchandiseId, quantity = 1) {
+  const query = `
+    mutation CreateCart($lines: [CartLineInput!]!) {
+      cartCreate(input: { lines: $lines }) {
+        cart {
+          id
+          checkoutUrl
+        }
+      }
+    }
+  `;
+  const data = await shopifyFetch(query, { lines: [{ merchandiseId, quantity }] });
+  return data.cartCreate.cart;
+}
+
+export async function addCartLine(cartId, merchandiseId, quantity = 1) {
+  const query = `
+    mutation AddCartLine($cartId: ID!, $lines: [CartLineInput!]!) {
+      cartLinesAdd(cartId: $cartId, lines: $lines) {
+        cart {
+          id
+          checkoutUrl
+        }
+      }
+    }
+  `;
+  const data = await shopifyFetch(query, { cartId, lines: [{ merchandiseId, quantity }] });
+  return data.cartLinesAdd.cart;
+}

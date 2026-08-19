@@ -10,7 +10,7 @@ const products = await getAllProducts();
             <li>
                 <a href={`/products/${product.handle}`} class="product-card">
                     {product.featuredImage ? (
-                    <img src={product.featuredImage.url} alt={product.featuredImage.altText ?? product.title} />
+                    <img src={product.featuredImage.url} alt={product.featuredImage.altText ?? product.title ?? 'Productafbeelding'} />
                     ) : (
                     <div class="product-image-placeholder" role="img" aria-label="Geen afbeelding beschikbaar">?</div>
                     )}

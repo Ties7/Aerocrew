@@ -14,7 +14,7 @@ const product = await getProductByHandle(handle);
 ---
 <Layout title={product.title}>
   {product.featuredImage ? (
-    <img src={product.featuredImage.url} alt={product.featuredImage.altText ?? product.title} />
+    <img src={product.featuredImage.url} alt={product.featuredImage.altText ?? product.title ?? 'Productafbeelding'} />
   ) : (
     <div class="product-image-placeholder" role="img" aria-label="Geen afbeelding beschikbaar">?</div>
   )}

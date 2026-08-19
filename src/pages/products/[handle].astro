@@ -1,16 +1,16 @@
 ---
 import Layout from '../../layouts/layout.astro';
-import { getAllProducts, getProductByHandle } from '../../lib/shopify.js';
+import { getAllProducts } from '../../lib/shopify.js';
 
 export async function getStaticPaths() {
   const products = await getAllProducts();
   return products.map((product) => ({
     params: { handle: product.handle },
+    props: { product },
   }));
 }
 
-const { handle } = Astro.params;
-const product = await getProductByHandle(handle);
+const { product } = Astro.props;
 ---
 <Layout title={product.title}>
   {product.featuredImage ? (

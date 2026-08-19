@@ -1,15 +1,35 @@
 ---
-import { getAllProducts, getProductByHandle } from '../../lib/shopify.js';
+import Layout from '../../layouts/layout.astro';
+import { getAllProducts } from '../../lib/shopify.js';
 
 export async function getStaticPaths() {
   const products = await getAllProducts();
   return products.map((product) => ({
     params: { handle: product.handle },
+    props: { product },
   }));
 }
 
-const { handle } = Astro.params;
-const product = await getProductByHandle(handle);
+const { product } = Astro.props;
 ---
-<h1>Productdetail</h1>
-<pre>{JSON.stringify(product, null, 2)}</pre>
+<Layout title={product.title}>
+  {product.featuredImage ? (
+    <img src={product.featuredImage.url} alt={product.featuredImage.altText ?? product.title ?? 'Productafbeelding'} />
+  ) : (
+    <div class="product-image-placeholder" role="img" aria-label="Geen afbeelding beschikbaar">?</div>
+  )}
+
+  <h1>{product.title}</h1>
+  <p>{product.priceRange.minVariantPrice.amount} {product.priceRange.minVariantPrice.currencyCode}</p>
+  <p>{product.description}</p>
+
+  <h2>Varianten</h2>
+  <ul>
+    {product.variants.nodes.map((variant) => (
+      <li>
+        {variant.title} - {variant.price.amount} {variant.price.currencyCode}
+        {!variant.availableForSale && ' (uitverkocht)'}
+      </li>
+    ))}
+  </ul>
+</Layout>

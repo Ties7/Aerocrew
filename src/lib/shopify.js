@@ -33,8 +33,12 @@ export async function getAllProducts() {
           id
           handle
           title
+          description
           featuredImage { url altText }
           priceRange { minVariantPrice { amount currencyCode } }
+          variants(first: 10) {
+            nodes { id title availableForSale price { amount currencyCode } }
+          }
         }
       }
     }
@@ -42,25 +46,4 @@ export async function getAllProducts() {
 
   const data = await shopifyFetch(query);
   return data.products.nodes;
-}
-
-export async function getProductByHandle(handle) {
-  const query = `
-    query($handle: String!) {
-      productByHandle(handle: $handle) {
-        id
-        handle
-        title
-        description
-        featuredImage { url altText }
-        priceRange { minVariantPrice { amount currencyCode } }
-        variants(first: 10) {
-          nodes { id title availableForSale price { amount currencyCode } }
-        }
-      }
-    }
-  `;
-
-  const data = await shopifyFetch(query, { handle });
-  return data.productByHandle;
 }

@@ -10,9 +10,14 @@ const { title } = Astro.props;
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
   </head>
-  <body>
-    <main>
-      <slot />
-    </main>
-  </body>
+        <body>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/products">Producten</a>
+            <a href="/cart">Winkelwagen</a>
+        </nav>
+        <main>
+            <slot />
+        </main>
+        </body>
 </html>

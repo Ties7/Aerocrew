@@ -1,15 +1,158 @@
-* {
+/* ==========================================================
+   Fonts in de <head> van Layout.astro:
+
+   Futura PT (Adobe Fonts, vereist een webproject in je Adobe-account):
+   <link rel="stylesheet" href="https://use.typekit.net/JOUW-ID.css">
+
+   Jost (Google Fonts):
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;700&display=swap">
+   ========================================================== */
+
+html {
+  /* ==================
+     Colors
+     ================== */
+  --color-main: #ffffff;
+  --color-secondary: #C2D4F0;
+  --color-tertiary: #709ADB;
+  --color-accent: #244D8F;
+  --color-accent-light: #487DD1;
+  --color-white: #ffffff;
+  --color-dark: #1a1a1a;
+  --color-text: #333333;
+  --color-muted: #666666;
+  --color-title: #1B3A6B;
+
+  --color-background: var(--color-main);
+  --color-surface: var(--color-secondary);
+  --color-border: var(--color-tertiary);
+  --color-border-input: var(--color-accent-light); /* 4.1:1, decoratieve rand haalt 3:1 niet */
+
+  /* ==================
+     Typography
+     ================== */
+
+  --font-primary: 'Futura PT', 'Jost', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-secondary: 'Jost', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Font sizes - Fluid typography with clamp() */
+  --font-size-display: clamp(3rem, 9vw, 6.75rem);                    /* 48px - 108px */
+  --font-size-heading-xl: clamp(2.5rem, 4vw + 0.5rem, 3.875rem);     /* 40px - 62px */
+  --font-size-heading-l: clamp(1.875rem, 3vw + 0.5rem, 2.5rem);      /* 30px - 40px */
+  --font-size-heading-m: clamp(1.5rem, 2.5vw + 0.25rem, 1.875rem);   /* 24px - 30px */
+  --font-size-heading-s: clamp(1.375rem, 2vw + 0.25rem, 1.625rem);   /* 22px - 26px */
+  --font-size-heading-xs: clamp(1.125rem, 1.5vw + 0.25rem, 1.25rem); /* 18px - 20px */
+  --font-size-body: clamp(1rem, 0.5vw + 0.875rem, 1.0625rem);        /* 16px - 17px */
+  --font-size-muted: clamp(0.8125rem, 0.5vw + 0.75rem, 0.875rem);    /* 13px - 14px */
+
+  /* Font weights */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+
+  /* ==================
+     Spacing Scale
+     ================== */
+  --space-0: 0;
+  --space-1: 0.25rem;    /* 4px */
+  --space-2: 0.5rem;     /* 8px */
+  --space-3: 0.75rem;    /* 12px */
+  --space-4: 1rem;       /* 16px */
+  --space-5: 1.25rem;    /* 20px */
+  --space-6: 1.5rem;     /* 24px */
+  --space-8: 2rem;       /* 32px */
+  --space-12: 3rem;      /* 48px */
+  --space-16: 4rem;      /* 64px */
+  --space-24: 6rem;      /* 96px */
+  --space-32: 8rem;      /* 128px */
+  --space-40: 10rem;     /* 160px */
+  --space-45: 11.25rem;  /* 180px */
+  --space-50: 12.5rem;   /* 200px */
+
+  /* ==================
+     Layout
+     ================== */
+  --container-max-width: 1440px;
+  --container-padding: var(--space-4);
+  --grid-gap: var(--space-8);
+  --tap-target: 44px;
+
+  /* ==================
+     Borders & Radius
+     ================== */
+  --border-width: 1px;
+  --border-radius-sm: 4px;
+  --border-radius-md: 8px;
+  --border-radius-lg: 16px;
+
+  /* ==================
+     Breakpoints
+     ================== */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+}
+
+*,
+*::before,
+*::after {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-  font-family: system-ui, sans-serif;
-  margin: 0;
-  padding: 1.5rem;
+  font-family: var(--font-primary);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-regular);
+  line-height: 1.6;
+  color: var(--color-text);
+  background-color: var(--color-background);
+}
+
+h1, h2, h3, h4 {
+  color: var(--color-title);
+  line-height: 1.2;
+}
+
+a { color: var(--color-accent); }
+
+/* Zichtbare focus, anders faalt de tabtest */
+:focus-visible {
+  outline: 2px solid var(--color-title);
+  outline-offset: 2px;
+}
+
+/* Zonder dit wordt elk formulierveld 13px Arial in Chrome */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  min-height: var(--tap-target);
+  cursor: pointer;
 }
 
 img {
   max-width: 100%;
   height: auto;
   display: block;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

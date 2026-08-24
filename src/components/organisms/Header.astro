@@ -52,7 +52,9 @@ const navLinks = [
 
       <div class="nav-icons">
         <i class="fa-solid fa-magnifying-glass search-icon" aria-label="Zoeken"></i>
-        <i class="fa-solid fa-cart-shopping cart-icon" aria-label="Winkelwagen"></i>
+        <a href="/cart" class="cart-link">
+          <i class="fa-solid fa-cart-shopping cart-icon" aria-hidden="true"></i>
+        </a>
       </div>
   </nav>
 
@@ -65,6 +67,7 @@ const navLinks = [
     top: 0;
     z-index: 100;
     padding-inline: var(--space-4);
+    font-family: var(--font-primary);
   }
 
   nav {
@@ -97,8 +100,16 @@ const navLinks = [
     color: var(--color-title);
     cursor: pointer;
     display: flex;
+    align-items: center;
     gap: var(--space-2);
     justify-self: end;
+  }
+
+  .cart-link {
+    display: flex;
+    align-items: center;
+    color: inherit;
+    text-decoration: none;
   }
 
   /* Desktop-navigatie: verborgen op mobiel, de mobiele versie zit in .nav-mobile */

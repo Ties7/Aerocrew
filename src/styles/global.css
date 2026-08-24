@@ -1,45 +1,132 @@
-/* ==========================================================
-   Fonts in de <head> van Layout.astro:
+@font-face {
+  font-family: 'FT Futura';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url('/fonts/FuturaCyrillicLight.woff') format('woff');
+}
 
-   Futura PT (Adobe Fonts, vereist een webproject in je Adobe-account):
-   <link rel="stylesheet" href="https://use.typekit.net/JOUW-ID.css">
+@font-face {
+  font-family: 'FT Futura';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/FuturaCyrillicBook.woff') format('woff');
+}
 
-   Jost (Google Fonts):
-   <link rel="preconnect" href="https://fonts.googleapis.com">
-   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;700&display=swap">
-   ========================================================== */
+@font-face {
+  font-family: 'FT Futura';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/FuturaCyrillicMedium.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'FT Futura';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/FuturaCyrillicDemi.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'FT Futura';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/FuturaCyrillicBold.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'FT Futura';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url('/fonts/FuturaCyrillicExtraBold.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'FT Futura';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url('/fonts/FuturaCyrillicHeavy.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Jost';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/jost-400.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Jost';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/jost-500.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Jost';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/jost-700.woff2') format('woff2');
+}
 
 html {
-  /* ==================
-     Colors
-     ================== */
-  --color-main: #ffffff;
-  --color-secondary: #C2D4F0;
-  --color-tertiary: #709ADB;
-  --color-accent: #244D8F;
-  --color-accent-light: #487DD1;
-  --color-white: #ffffff;
-  --color-dark: #1a1a1a;
-  --color-text: #333333;
-  --color-muted: #666666;
-  --color-title: #1B3A6B;
 
-  --color-background: var(--color-main);
-  --color-surface: var(--color-secondary);
-  --color-border: var(--color-tertiary);
-  --color-border-input: var(--color-accent-light); /* 4.1:1, decoratieve rand haalt 3:1 niet */
+  /* Blauw */
+  --color-navy-900: #1B3A6B;
+  --color-navy-700: #244D8F;
+  --color-blue-500: #487DD1;
+  --color-blue-300: #709ADB;
+  --color-blue-100: #C2D4F0;
+
+  /* Neutraal */
+  --color-black: #000000;
+  --color-grey-900: #1A1A1A;
+  --color-grey-700: #333333;
+  --color-grey-500: #666666;
+  --color-white: #FFFFFF;
+
+  /* ==================
+     Aliases - hier pak je uit, niet de hexwaarden hierboven
+     ================== */
+  --color-background: var(--color-white);
+  --color-text: var(--color-grey-900);   /* guide zegt #000000, zie notitie */
+  --color-muted: var(--color-grey-500);  /* 5.7:1 op wit */
+  --color-title: var(--color-navy-900);  /* 11.3:1 op wit */
+
+  --color-accent: var(--color-navy-700);       /* links en knoppen, 8.3:1 */
+  --color-accent-hover: var(--color-navy-900);
+  --color-accent-soft: var(--color-blue-500);  /* 4.1:1, alleen randen, iconen en grote tekst */
+
+  --color-focus: var(--color-navy-900);
+
+  /* Afgeleid, staat niet in de style guide. Laten bevestigen. */
+  --color-border: #E4E4E4;              /* decoratieve hairlines */
+  --color-border-strong: var(--color-grey-500); /* inputranden, 5.7:1 */
+  --color-surface: #F7F9FC;             /* lichte panelen, kaarten */
+  --color-success: #1E7A45;             /* op voorraad */
+  --color-danger: #B3261E;              /* sale, formulierfouten */
+
+  color-scheme: light;
 
   /* ==================
      Typography
      ================== */
-
-  --font-primary: 'Futura PT', 'Jost', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-primary: 'FT Futura', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-secondary: 'Jost', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
-  /* Font sizes - Fluid typography with clamp() */
+  /* Font sizes - de maxima komen uit de style guide,
+     de ondergrens is toegevoegd zodat het op mobiel niet breekt */
   --font-size-display: clamp(3rem, 9vw, 6.75rem);                    /* 48px - 108px */
-  --font-size-heading-xl: clamp(2.5rem, 4vw + 0.5rem, 3.875rem);     /* 40px - 62px */
+  --font-size-heading-xl: clamp(2.5rem, 5vw + 0.5rem, 3.875rem);     /* 40px - 62px */
   --font-size-heading-l: clamp(1.875rem, 3vw + 0.5rem, 2.5rem);      /* 30px - 40px */
   --font-size-heading-m: clamp(1.5rem, 2.5vw + 0.25rem, 1.875rem);   /* 24px - 30px */
   --font-size-heading-s: clamp(1.375rem, 2vw + 0.25rem, 1.625rem);   /* 22px - 26px */
@@ -51,6 +138,16 @@ html {
   --font-weight-regular: 400;
   --font-weight-medium: 500;
   --font-weight-bold: 700;
+
+  /* Line heights */
+  --leading-tight: 1.05;   /* display */
+  --leading-snug: 1.2;     /* koppen */
+  --leading-normal: 1.6;   /* lopende tekst */
+
+  /* Letter spacing */
+  --tracking-tight: -0.01em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.1em;  /* eyebrows en labels in kapitalen */
 
   /* ==================
      Spacing Scale
@@ -71,13 +168,16 @@ html {
   --space-45: 11.25rem;  /* 180px */
   --space-50: 12.5rem;   /* 200px */
 
+  --space-section: clamp(var(--space-16), 10vw, var(--space-32));
+
   /* ==================
      Layout
      ================== */
   --container-max-width: 1440px;
-  --container-padding: var(--space-4);
+  --container-padding: clamp(var(--space-4), 4vw, var(--space-12));
   --grid-gap: var(--space-8);
-  --tap-target: 44px;
+  --header-height: 4rem;
+  --tap-target: 44px; /* minimum voor knoppen, WCAG 2.2 SC 2.5.8 */
 
   /* ==================
      Borders & Radius
@@ -86,16 +186,43 @@ html {
   --border-radius-sm: 4px;
   --border-radius-md: 8px;
   --border-radius-lg: 16px;
+  --border-radius-full: 999px;
 
   /* ==================
-     Breakpoints
+     Elevation
+     ================== */
+  --shadow-sm: 0 1px 2px rgb(27 58 107 / 0.08);
+  --shadow-md: 0 2px 8px rgb(27 58 107 / 0.10);
+  --shadow-lg: 0 8px 32px rgb(27 58 107 / 0.14);
+
+  /* ==================
+     Motion
+     ================== */
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+  --ease: cubic-bezier(0.2, 0, 0.2, 1);
+
+  /* ==================
+     Z-index
+     ================== */
+  --z-header: 100;
+  --z-drawer: 200;   /* winkelmandje */
+  --z-modal: 300;
+  --z-skiplink: 400;
+
+  /* ==================
+     Breakpoints - alleen ter documentatie,
+     custom properties werken niet in @media
      ================== */
   --breakpoint-sm: 640px;
   --breakpoint-md: 768px;
   --breakpoint-lg: 1024px;
   --breakpoint-xl: 1280px;
-  --breakpoint-2xl: 1536px;
 }
+
+/* ==========================================================
+   Base
+   ========================================================== */
 
 *,
 *::before,
@@ -105,29 +232,55 @@ html {
   padding: 0;
 }
 
+html {
+  scroll-padding-top: calc(var(--header-height) + var(--space-4));
+}
+
 body {
-  font-family: var(--font-primary);
+  min-height: 100dvh;
+  font-family: var(--font-secondary);
   font-size: var(--font-size-body);
   font-weight: var(--font-weight-regular);
-  line-height: 1.6;
+  line-height: var(--leading-normal);
   color: var(--color-text);
   background-color: var(--color-background);
+  -webkit-font-smoothing: antialiased;
 }
 
 h1, h2, h3, h4 {
+  font-family: var(--font-primary);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-tight);
   color: var(--color-title);
-  line-height: 1.2;
+  text-wrap: balance;
 }
 
-a { color: var(--color-accent); }
+h1 {
+  font-size: var(--font-size-heading-xl);
+  line-height: var(--leading-tight);
+}
 
-/* Zichtbare focus, anders faalt de tabtest */
+h2 { font-size: var(--font-size-heading-l); }
+h3 { font-size: var(--font-size-heading-m); }
+h4 { font-size: var(--font-size-heading-s); }
+
+p { text-wrap: pretty; }
+
+a {
+  color: var(--color-accent);
+  text-underline-offset: 0.15em;
+}
+
+a:hover { color: var(--color-accent-hover); }
+
+/* Zichtbare focus, verplicht voor de toetsenbordtest */
 :focus-visible {
-  outline: 2px solid var(--color-title);
+  outline: 2px solid var(--color-focus);
   outline-offset: 2px;
+  border-radius: var(--border-radius-sm);
 }
 
-/* Zonder dit wordt elk formulierveld 13px Arial in Chrome */
 input,
 button,
 textarea,
@@ -136,10 +289,6 @@ select {
   color: inherit;
 }
 
-button {
-  min-height: var(--tap-target);
-  cursor: pointer;
-}
 
 img {
   max-width: 100%;
@@ -147,12 +296,38 @@ img {
   display: block;
 }
 
+
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+
+/* Alleen zichtbaar voor screenreaders */
+.visually-hidden:not(:focus):not(:active) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Skiplink, eerste element in de body */
+.skip-link {
+  position: absolute;
+  top: var(--space-2);
+  left: var(--space-2);
+  z-index: var(--z-skiplink);
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--color-navy-900);
+  color: var(--color-white);
+  transform: translateY(-200%);
 }

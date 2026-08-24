@@ -93,6 +93,12 @@ export async function addCartLine(cartId, merchandiseId, quantity = 1) {
   const data = await shopifyFetch(query, { cartId, lines: [{ merchandiseId, quantity }] });
   const { cart, userErrors } = data.cartLinesAdd;
 
+  const cartdontexist = userErrors.some((e) => e.message.includes('cart does not exist'));
+
+  if (cartdontexist) {
+    return createCart(merchandiseId, quantity);
+  }
+
   if (userErrors.length > 0) {
     throw new Error(userErrors.map((e) => e.message).join(', '));
   }

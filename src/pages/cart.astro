@@ -6,33 +6,46 @@ import Layout from '../layouts/layout.astro';
   <div id="cart-content">
     <p>Winkelwagen wordt geladen...</p>
   </div>
+  <p>Subtotaal: <span id="subtotal">&mdash;</span></p>
+  <p>Btw: <span id="btw">&mdash;</span></p>
+  <p>Totaal: <span id="total" aria-live="polite">&mdash;</span></p>
+  <a href="#" id="checkout-link">Afrekenen</a>
 </Layout>
 
 <script>
   import { getCart, updateCartLine, removeCartLine } from '../lib/shopify.js';
 
   const container = document.getElementById('cart-content');
+  const formatter = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' });
+
+  function resetSummary() {
+    document.getElementById('subtotal').textContent = '—';
+    document.getElementById('btw').textContent = '—';
+    document.getElementById('total').textContent = '—';
+    document.getElementById('checkout-link').href = '#';
+  }
 
   async function renderCart() {
     const cartId = localStorage.getItem('cartId');
 
     if (!cartId) {
       container.innerHTML = '<p>Je winkelwagen is leeg.</p>';
+      resetSummary();
       return;
     }
 
     const cart = await getCart(cartId);
 
     if (!cart) {
-      // cartId bestond niet meer bij Shopify (verlopen of al afgerekend) opruimen
       localStorage.removeItem('cartId');
       container.innerHTML = '<p>Je winkelwagen is leeg.</p>';
+      resetSummary();
       return;
     }
 
     if (cart.lines.nodes.length === 0) {
-      // cart bestaat wel, is gewoon leeg niks opruimen
       container.innerHTML = '<p>Je winkelwagen is leeg.</p>';
+      resetSummary();
       return;
     }
 
@@ -40,7 +53,13 @@ import Layout from '../layouts/layout.astro';
       <ul>
         ${cart.lines.nodes.map((line) => `
           <li>
+            <img
+              src="${line.merchandise.image?.url ?? '/placeholder-product.png'}"
+              alt="${line.merchandise.image?.altText ?? line.merchandise.product.title}"
+              width="96" height="96"
+            >
             <p>${line.merchandise.product.title} — ${line.merchandise.title}</p>
+            <p>${formatter.format(line.merchandise.price.amount)}</p>
             <p>${line.cost.totalAmount.amount} ${line.cost.totalAmount.currencyCode}</p>
             <label>
               Aantal
@@ -50,9 +69,12 @@ import Layout from '../layouts/layout.astro';
           </li>
         `).join('')}
       </ul>
-      <p>Totaal: ${cart.cost.totalAmount.amount} ${cart.cost.totalAmount.currencyCode}</p>
-      <a href="${cart.checkoutUrl}">Afrekenen</a>
     `;
+
+    document.getElementById('subtotal').textContent = formatter.format(cart.cost.subtotalAmount.amount);
+    document.getElementById('btw').textContent = formatter.format(cart.cost.totalTaxAmount?.amount ?? 0);
+    document.getElementById('total').textContent = formatter.format(cart.cost.totalAmount.amount);
+    document.getElementById('checkout-link').href = cart.checkoutUrl;
 
     attachEventListeners(cartId);
   }
@@ -62,13 +84,11 @@ import Layout from '../layouts/layout.astro';
       input.addEventListener('change', async (event) => {
         const lineId = event.target.dataset.lineId;
         const quantity = Number(event.target.value);
-
         if (quantity <= 0) {
           await removeCartLine(cartId, lineId);
         } else {
           await updateCartLine(cartId, lineId, quantity);
         }
-
         renderCart();
       });
     });

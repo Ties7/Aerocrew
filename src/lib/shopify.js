@@ -114,6 +114,8 @@ export async function getCart(cartId) {
         checkoutUrl
         totalQuantity
         cost {
+          subtotalAmount { amount currencyCode }
+          totalTaxAmount { amount currencyCode }
           totalAmount { amount currencyCode }
         }
         lines(first: 50) {
@@ -124,6 +126,8 @@ export async function getCart(cartId) {
               ... on ProductVariant {
                 id
                 title
+                image { url altText }
+                price { amount currencyCode }
                 product {
                   title
                   handle

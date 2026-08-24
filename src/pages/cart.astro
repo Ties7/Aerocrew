@@ -23,7 +23,15 @@ import Layout from '../layouts/layout.astro';
 
     const cart = await getCart(cartId);
 
-    if (!cart || cart.lines.nodes.length === 0) {
+    if (!cart) {
+      // cartId bestond niet meer bij Shopify (verlopen of al afgerekend) opruimen
+      localStorage.removeItem('cartId');
+      container.innerHTML = '<p>Je winkelwagen is leeg.</p>';
+      return;
+    }
+
+    if (cart.lines.nodes.length === 0) {
+      // cart bestaat wel, is gewoon leeg niks opruimen
       container.innerHTML = '<p>Je winkelwagen is leeg.</p>';
       return;
     }

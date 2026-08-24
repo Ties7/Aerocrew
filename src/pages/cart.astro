@@ -61,10 +61,12 @@ import Layout from '../layouts/layout.astro';
             <p>${line.merchandise.product.title} — ${line.merchandise.title}</p>
             <p>${formatter.format(line.merchandise.price.amount)}</p>
             <p>${line.cost.totalAmount.amount} ${line.cost.totalAmount.currencyCode}</p>
-            <label>
-              Aantal
-              <input type="number" min="0" value="${line.quantity}" class="quantity-input" data-line-id="${line.id}" />
-            </label>
+            <div class="quantity-control">
+              <label class="visually-hidden" for="qty-${line.id}">Aantal voor ${line.merchandise.product.title}</label>
+              <button type="button" class="qty-decrease" data-line-id="${line.id}" aria-label="Aantal verlagen voor ${line.merchandise.product.title}">&minus;</button>
+              <input type="number" id="qty-${line.id}" min="0" value="${line.quantity}" class="quantity-input" data-line-id="${line.id}" />
+              <button type="button" class="qty-increase" data-line-id="${line.id}" aria-label="Aantal verhogen voor ${line.merchandise.product.title}">+</button>
+            </div>
             <button class="remove-button" data-line-id="${line.id}">Verwijderen</button>
           </li>
         `).join('')}
@@ -79,17 +81,41 @@ import Layout from '../layouts/layout.astro';
     attachEventListeners(cartId);
   }
 
+  async function changeQuantity(cartId, lineId, quantity) {
+    if (quantity <= 0) {
+      await removeCartLine(cartId, lineId);
+    } else {
+      await updateCartLine(cartId, lineId, quantity);
+    }
+    renderCart();
+  }
+
   function attachEventListeners(cartId) {
     document.querySelectorAll('.quantity-input').forEach((input) => {
-      input.addEventListener('change', async (event) => {
+      input.addEventListener('change', (event) => {
         const lineId = event.target.dataset.lineId;
         const quantity = Number(event.target.value);
-        if (quantity <= 0) {
-          await removeCartLine(cartId, lineId);
-        } else {
-          await updateCartLine(cartId, lineId, quantity);
-        }
-        renderCart();
+        changeQuantity(cartId, lineId, quantity);
+      });
+    });
+
+    document.querySelectorAll('.qty-decrease').forEach((button) => {
+      button.addEventListener('click', (event) => {
+        const lineId = event.target.dataset.lineId;
+        const input = document.getElementById(`qty-${lineId}`);
+        const quantity = Number(input.value) - 1;
+        input.value = quantity;
+        changeQuantity(cartId, lineId, quantity);
+      });
+    });
+
+    document.querySelectorAll('.qty-increase').forEach((button) => {
+      button.addEventListener('click', (event) => {
+        const lineId = event.target.dataset.lineId;
+        const input = document.getElementById(`qty-${lineId}`);
+        const quantity = Number(input.value) + 1;
+        input.value = quantity;
+        changeQuantity(cartId, lineId, quantity);
       });
     });
 

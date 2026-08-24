@@ -12,24 +12,7 @@ const navLinks = [
 ---
 
 <header>
-  <nav aria-label="Hoofdnavigatie">
-      <a href="/" class="logo-link">
-        <img class="logo" src="/aerocrew_logo1.png" alt="Aerocrew logo" />
-      </a>
-
-      <ul class="nav-list-desktop">
-          {navLinks.map((link) => (
-              <li class="nav-item">
-                  <a
-                      href={link.href}
-                      class={`nav-link ${currentPath === link.href ? 'active' : ''}`}
-                  >
-                      {link.label}
-                  </a>
-              </li>
-          ))}
-      </ul>
-
+  <nav>
       <details class="nav-mobile">
             <summary class="hamburger" aria-label="Menu openen">
                 <span class="bar" aria-hidden="true"></span>
@@ -50,9 +33,25 @@ const navLinks = [
             </ul>
       </details>
 
+      <a href="/" class="logo-link">
+        <img class="logo" src="/aerocrew_logo1.png" alt="Aerocrew logo" />
+      </a>
+
+      <ul class="nav-list-desktop">
+          {navLinks.map((link) => (
+              <li class="nav-item">
+                  <a href={link.href} class={`nav-link ${currentPath === link.href ? 'active' : ''}`}>
+                      {link.label}
+                  </a>
+              </li>
+          ))}
+      </ul>
+
       <div class="nav-icons">
-        <i class="fa-solid fa-magnifying-glass search-icon" aria-label="Zoeken"></i>
-        <a href="/cart" class="cart-link">
+        <a href="/zoeken" class="extra-link">
+          <i class="fa-solid fa-magnifying-glass search-icon" aria-hidden="true"></i>
+        </a>
+        <a href="/cart" class="extra-link">
           <i class="fa-solid fa-cart-shopping cart-icon" aria-hidden="true"></i>
         </a>
       </div>
@@ -105,7 +104,7 @@ const navLinks = [
     justify-self: end;
   }
 
-  .cart-link {
+  .extra-link {
     display: flex;
     align-items: center;
     color: inherit;

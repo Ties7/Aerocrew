@@ -64,7 +64,7 @@ const navLinks = [
     background-color: var(--color-main);
     position: sticky;
     top: 0;
-    z-index: 100;
+    z-index: var(--z-header);
     padding-inline: var(--space-4);
     font-family: var(--font-primary);
   }
@@ -95,7 +95,7 @@ const navLinks = [
 
   .nav-icons {
     grid-area: icons;
-    font-size: 1.3rem;
+    font-size: var(--font-size-heading-s);
     color: var(--color-title);
     cursor: pointer;
     display: flex;
@@ -115,6 +115,7 @@ const navLinks = [
   .nav-list-desktop {
     display: none;
     list-style: none;
+    font-size: var(--font-size-heading-xs);
   }
 
   .nav-list-mobile {
@@ -137,7 +138,7 @@ const navLinks = [
   }
 
   .nav-mobile[open] .nav-list-mobile .nav-link {
-    font-size: 1.5rem;
+    font-size: var(--font-size-heading-m);
   }
 
   @media (min-width: 800px) {

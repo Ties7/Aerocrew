@@ -107,8 +107,6 @@ import Layout from '../layouts/layout.astro';
   }
 
   async function changeQuantity(cartId, lineId, quantity) {
-    const controls = document.querySelectorAll(`[data-line-id="${lineId}"]`);
-    controls.forEach((control) => { control.disabled = true; });
 
     try {
       if (quantity <= 0) {

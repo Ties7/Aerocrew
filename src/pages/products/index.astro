@@ -1,25 +1,40 @@
 ---
 import Layout from '../../layouts/layout.astro';
 import { getAllProducts } from '../../lib/shopify.js';
-const products = await getAllProducts();
+
+let products = [];
+let fetchError = false;
+
+try {
+  products = await getAllProducts();
+} catch (error) {
+  console.error(error);
+  fetchError = true;
+}
 ---
 <Layout title="Productoverzicht">
   <h1>Productoverzicht</h1>
+  {fetchError ? (
+    <p>Producten konden niet worden geladen. Probeer het later opnieuw.</p>
+  ) : products.length === 0 ? (
+    <p>Geen producten gevonden.</p>
+  ) : (
     <ul class="product-grid">
-        {products.map((product) => (
-            <li>
-                <a href={`/products/${product.handle}`} class="product-card">
-                    {product.featuredImage ? (
-                    <img src={product.featuredImage.url} alt={product.featuredImage.altText ?? product.title ?? 'Productafbeelding'} />
-                    ) : (
-                    <div class="product-image-placeholder" role="img" aria-label="Geen afbeelding beschikbaar">?</div>
-                    )}
-                    <h2>{product.title}</h2>
-                    <p>{product.priceRange.minVariantPrice.amount} {product.priceRange.minVariantPrice.currencyCode}</p>
-                </a>
-            </li>
-        ))}
+      {products.map((product) => (
+        <li>
+          <a href={`/products/${product.handle}`} class="product-card">
+            {product.featuredImage ? (
+            <img src={product.featuredImage.url} alt={product.featuredImage.altText ?? product.title ?? 'Productafbeelding'} />
+            ) : (
+            <div class="product-image-placeholder" role="img" aria-label="Geen afbeelding beschikbaar">?</div>
+            )}
+            <h2>{product.title}</h2>
+            <p>{product.priceRange.minVariantPrice.amount} {product.priceRange.minVariantPrice.currencyCode}</p>
+          </a>
+        </li>
+      ))}
     </ul>
+  )}
 </Layout>
 
 <style>

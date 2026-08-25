@@ -94,26 +94,23 @@ html {
   --color-grey-500: #666666;
   --color-white: #FFFFFF;
 
-  /* ==================
-     Aliases - hier pak je uit, niet de hexwaarden hierboven
-     ================== */
-  --color-background: var(--color-white);
-  --color-text: var(--color-grey-900);   /* guide zegt #000000, zie notitie */
-  --color-muted: var(--color-grey-500);  /* 5.7:1 op wit */
-  --color-title: var(--color-navy-900);  /* 11.3:1 op wit */
 
-  --color-accent: var(--color-navy-700);       /* links en knoppen, 8.3:1 */
+  --color-background: var(--color-white);
+  --color-text: var(--color-grey-900);  
+  --color-muted: var(--color-grey-500); 
+  --color-title: var(--color-navy-900); 
+
+  --color-accent: var(--color-navy-700);  
   --color-accent-hover: var(--color-navy-900);
-  --color-accent-soft: var(--color-blue-500);  /* 4.1:1, alleen randen, iconen en grote tekst */
+  --color-accent-soft: var(--color-blue-500); 
 
   --color-focus: var(--color-navy-900);
 
-  /* Afgeleid, staat niet in de style guide. Laten bevestigen. */
-  --color-border: #E4E4E4;              /* decoratieve hairlines */
-  --color-border-strong: var(--color-grey-500); /* inputranden, 5.7:1 */
-  --color-surface: #F7F9FC;             /* lichte panelen, kaarten */
-  --color-success: #1E7A45;             /* op voorraad */
-  --color-danger: #B3261E;              /* sale, formulierfouten */
+  --color-border: #E4E4E4;     
+  --color-border-strong: var(--color-grey-500);
+  --color-surface: #F7F9FC;   
+  --color-success: #1E7A45;     
+  --color-danger: #B3261E;        
 
   color-scheme: light;
 
@@ -140,14 +137,14 @@ html {
   --font-weight-bold: 700;
 
   /* Line heights */
-  --leading-tight: 1.05;   /* display */
-  --leading-snug: 1.2;     /* koppen */
-  --leading-normal: 1.6;   /* lopende tekst */
+  --leading-tight: 1.05; 
+  --leading-snug: 1.2;   
+  --leading-normal: 1.6;  
 
   /* Letter spacing */
   --tracking-tight: -0.01em;
   --tracking-normal: 0;
-  --tracking-wide: 0.1em;  /* eyebrows en labels in kapitalen */
+  --tracking-wide: 0.1em; 
 
   /* ==================
      Spacing Scale
@@ -177,7 +174,6 @@ html {
   --container-padding: clamp(var(--space-4), 4vw, var(--space-12));
   --grid-gap: var(--space-8);
   --header-height: 4rem;
-  --tap-target: 44px; /* minimum voor knoppen, WCAG 2.2 SC 2.5.8 */
 
   /* ==================
      Borders & Radius
@@ -187,37 +183,6 @@ html {
   --border-radius-md: 8px;
   --border-radius-lg: 16px;
   --border-radius-full: 999px;
-
-  /* ==================
-     Elevation
-     ================== */
-  --shadow-sm: 0 1px 2px rgb(27 58 107 / 0.08);
-  --shadow-md: 0 2px 8px rgb(27 58 107 / 0.10);
-  --shadow-lg: 0 8px 32px rgb(27 58 107 / 0.14);
-
-  /* ==================
-     Motion
-     ================== */
-  --duration-fast: 120ms;
-  --duration-base: 200ms;
-  --ease: cubic-bezier(0.2, 0, 0.2, 1);
-
-  /* ==================
-     Z-index
-     ================== */
-  --z-header: 100;
-  --z-drawer: 200;   /* winkelmandje */
-  --z-modal: 300;
-  --z-skiplink: 400;
-
-  /* ==================
-     Breakpoints - alleen ter documentatie,
-     custom properties werken niet in @media
-     ================== */
-  --breakpoint-sm: 640px;
-  --breakpoint-md: 768px;
-  --breakpoint-lg: 1024px;
-  --breakpoint-xl: 1280px;
 }
 
 /* ==========================================================
@@ -274,7 +239,6 @@ a {
 
 a:hover { color: var(--color-accent-hover); }
 
-/* Zichtbare focus, verplicht voor de toetsenbordtest */
 :focus-visible {
   outline: 2px solid var(--color-focus);
   outline-offset: 2px;
@@ -331,3 +295,4 @@ img {
   color: var(--color-white);
   transform: translateY(-200%);
 }
+

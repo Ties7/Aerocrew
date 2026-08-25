@@ -1,0 +1,78 @@
+---
+import Layout from '../layouts/layout.astro';
+---
+<Layout title="Winkelwagen">
+  <h1>Winkelwagen</h1>
+  <div id="cart-content">
+    <p>Winkelwagen wordt geladen...</p>
+  </div>
+</Layout>
+
+<script>
+  import { getCart, updateCartLine, removeCartLine } from '../lib/shopify.js';
+
+  const container = document.getElementById('cart-content');
+
+  async function renderCart() {
+    const cartId = localStorage.getItem('cartId');
+
+    if (!cartId) {
+      container.innerHTML = '<p>Je winkelwagen is leeg.</p>';
+      return;
+    }
+
+    const cart = await getCart(cartId);
+
+    if (!cart || cart.lines.nodes.length === 0) {
+      container.innerHTML = '<p>Je winkelwagen is leeg.</p>';
+      return;
+    }
+
+    container.innerHTML = `
+      <ul>
+        ${cart.lines.nodes.map((line) => `
+          <li>
+            <p>${line.merchandise.product.title} — ${line.merchandise.title}</p>
+            <p>${line.cost.totalAmount.amount} ${line.cost.totalAmount.currencyCode}</p>
+            <label>
+              Aantal
+              <input type="number" min="0" value="${line.quantity}" class="quantity-input" data-line-id="${line.id}" />
+            </label>
+            <button class="remove-button" data-line-id="${line.id}">Verwijderen</button>
+          </li>
+        `).join('')}
+      </ul>
+      <p>Totaal: ${cart.cost.totalAmount.amount} ${cart.cost.totalAmount.currencyCode}</p>
+      <a href="${cart.checkoutUrl}">Afrekenen</a>
+    `;
+
+    attachEventListeners(cartId);
+  }
+
+  function attachEventListeners(cartId) {
+    document.querySelectorAll('.quantity-input').forEach((input) => {
+      input.addEventListener('change', async (event) => {
+        const lineId = event.target.dataset.lineId;
+        const quantity = Number(event.target.value);
+
+        if (quantity <= 0) {
+          await removeCartLine(cartId, lineId);
+        } else {
+          await updateCartLine(cartId, lineId, quantity);
+        }
+
+        renderCart();
+      });
+    });
+
+    document.querySelectorAll('.remove-button').forEach((button) => {
+      button.addEventListener('click', async (event) => {
+        const lineId = event.target.dataset.lineId;
+        await removeCartLine(cartId, lineId);
+        renderCart();
+      });
+    });
+  }
+
+  renderCart();
+</script>

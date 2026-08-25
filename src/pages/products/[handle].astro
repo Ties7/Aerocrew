@@ -24,12 +24,45 @@ const { product } = Astro.props;
   <p>{product.description}</p>
 
   <h2>Varianten</h2>
-  <ul>
+  <label for="variant-select">Kies een variant</label>
+  <select id="variant-select">
     {product.variants.nodes.map((variant) => (
-      <li>
-        {variant.title} - {variant.price.amount} {variant.price.currencyCode}
+      <option value={variant.id} disabled={!variant.availableForSale}>
+        {variant.title} — {variant.price.amount} {variant.price.currencyCode}
         {!variant.availableForSale && ' (uitverkocht)'}
-      </li>
+      </option>
     ))}
-  </ul>
+  </select>
+
+  <button id="add-to-cart-button">In winkelwagen</button>
+  <p id="cart-feedback" role="status"></p>
 </Layout>
+
+<script>
+  import { createCart, addCartLine } from '../../lib/shopify.js';
+
+  const select = document.getElementById('variant-select');
+  const button = document.getElementById('add-to-cart-button');
+  const feedback = document.getElementById('cart-feedback');
+
+  button.addEventListener('click', async () => {
+    const merchandiseId = select.value;
+    button.disabled = true;
+    feedback.textContent = 'Toevoegen...';
+
+    try {
+      const existingCartId = localStorage.getItem('cartId');
+      const cart = existingCartId
+        ? await addCartLine(existingCartId, merchandiseId)
+        : await createCart(merchandiseId);
+
+      localStorage.setItem('cartId', cart.id);
+      feedback.textContent = 'Toegevoegd aan winkelwagen!';
+    } catch (error) {
+      console.error(error);
+      feedback.textContent = 'Er ging iets mis, probeer het opnieuw.';
+    } finally {
+      button.disabled = false;
+    }
+  });
+</script>

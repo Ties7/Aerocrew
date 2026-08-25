@@ -47,3 +47,141 @@ export async function getAllProducts() {
   const data = await shopifyFetch(query);
   return data.products.nodes;
 }
+
+export async function createCart(merchandiseId, quantity = 1) {
+  const query = `
+    mutation CreateCart($lines: [CartLineInput!]!) {
+      cartCreate(input: { lines: $lines }) {
+        cart {
+          id
+          checkoutUrl
+        }
+        userErrors {
+          field
+          message
+        }
+      }
+    }
+  `;
+
+  const data = await shopifyFetch(query, { lines: [{ merchandiseId, quantity }] });
+  const { cart, userErrors } = data.cartCreate;
+
+  if (userErrors.length > 0) {
+    throw new Error(userErrors.map((e) => e.message).join(', '));
+  }
+
+  return cart;
+}
+
+export async function addCartLine(cartId, merchandiseId, quantity = 1) {
+  const query = `
+    mutation AddCartLine($cartId: ID!, $lines: [CartLineInput!]!) {
+      cartLinesAdd(cartId: $cartId, lines: $lines) {
+        cart {
+          id
+          checkoutUrl
+        }
+        userErrors {
+          field
+          message
+        }
+      }
+    }
+  `;
+
+  const data = await shopifyFetch(query, { cartId, lines: [{ merchandiseId, quantity }] });
+  const { cart, userErrors } = data.cartLinesAdd;
+
+  if (userErrors.length > 0) {
+    throw new Error(userErrors.map((e) => e.message).join(', '));
+  }
+
+  return cart;
+}
+
+export async function getCart(cartId) {
+  const query = `
+    query GetCart($id: ID!) {
+      cart(id: $id) {
+        id
+        checkoutUrl
+        totalQuantity
+        cost {
+          totalAmount { amount currencyCode }
+        }
+        lines(first: 50) {
+          nodes {
+            id
+            quantity
+            merchandise {
+              ... on ProductVariant {
+                id
+                title
+                product {
+                  title
+                  handle
+                }
+              }
+            }
+            cost {
+              totalAmount { amount currencyCode }
+            }
+          }
+        }
+      }
+    }
+  `;
+  const data = await shopifyFetch(query, { id: cartId });
+  return data.cart;
+}
+
+export async function updateCartLine(cartId, lineId, quantity) {
+  const query = `
+    mutation UpdateCartLine($cartId: ID!, $lines: [CartLineUpdateInput!]!) {
+      cartLinesUpdate(cartId: $cartId, lines: $lines) {
+        cart {
+          id
+          checkoutUrl
+        }
+        userErrors {
+          field
+          message
+        }
+      }
+    }
+  `;
+  const data = await shopifyFetch(query, { cartId, lines: [{ id: lineId, quantity }] });
+  const { cart, userErrors } = data.cartLinesUpdate;
+
+  if (userErrors.length > 0) {
+    throw new Error(userErrors.map((e) => e.message).join(', '));
+  }
+
+  return cart;
+}
+
+export async function removeCartLine(cartId, lineId) {
+  const query = `
+    mutation RemoveCartLine($cartId: ID!, $lineIds: [ID!]!) {
+      cartLinesRemove(cartId: $cartId, lineIds: $lineIds) {
+        cart {
+          id
+          checkoutUrl
+        }
+        userErrors {
+          field
+          message
+        }
+      }
+    }
+  `;
+  const data = await shopifyFetch(query, { cartId, lineIds: [lineId] });
+  const { cart, userErrors } = data.cartLinesRemove;
+
+  if (userErrors.length > 0) {
+    throw new Error(userErrors.map((e) => e.message).join(', '));
+  }
+
+  return cart;
+}

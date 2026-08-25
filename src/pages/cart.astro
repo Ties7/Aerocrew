@@ -3,13 +3,29 @@ import Layout from '../layouts/layout.astro';
 ---
 <Layout title="Winkelwagen">
   <h1>Winkelwagen</h1>
-  <div id="cart-content">
-    <p>Winkelwagen wordt geladen...</p>
+
+  <div class="cart-layout">
+    <div id="cart-content">
+      <p>Winkelwagen wordt geladen...</p>
+    </div>
+
+    <aside class="order-summary" aria-label="Bestelling overzicht">
+      <h2>Overzicht</h2>
+      <dl class="summary-rows">
+        <dt>Subtotaal</dt>
+        <dd id="subtotal">&mdash;</dd>
+        <dt>Verzending</dt>
+        <dd>Gratis</dd>
+        <dt>Waarvan btw (21%)</dt>
+        <dd id="btw">&mdash;</dd>
+      </dl>
+      <div class="summary-total">
+        <span>Totaal</span>
+        <span id="total" aria-live="polite">&mdash;</span>
+      </div>
+      <a id="checkout-link" href="#" class="checkout-button">Afrekenen</a>
+    </aside>
   </div>
-  <p>Subtotaal: <span id="subtotal">&mdash;</span></p>
-  <p>Btw: <span id="btw">&mdash;</span></p>
-  <p>Totaal: <span id="total" aria-live="polite">&mdash;</span></p>
-  <a href="#" id="checkout-link">Afrekenen</a>
 </Layout>
 
 <script>
@@ -52,22 +68,29 @@ import Layout from '../layouts/layout.astro';
     container.innerHTML = `
       <ul>
         ${cart.lines.nodes.map((line) => `
-          <li>
-            <img
-              src="${line.merchandise.image?.url ?? '/placeholder-product.png'}"
-              alt="${line.merchandise.image?.altText ?? line.merchandise.product.title}"
-              width="96" height="96"
-            >
-            <p>${line.merchandise.product.title} — ${line.merchandise.title}</p>
-            <p>${formatter.format(line.merchandise.price.amount)}</p>
-            <p>${line.cost.totalAmount.amount} ${line.cost.totalAmount.currencyCode}</p>
-            <div class="quantity-control">
-              <label class="visually-hidden" for="qty-${line.id}">Aantal voor ${line.merchandise.product.title}</label>
-              <button type="button" class="qty-decrease" data-line-id="${line.id}" aria-label="Aantal verlagen voor ${line.merchandise.product.title}">&minus;</button>
-              <input type="number" id="qty-${line.id}" min="0" value="${line.quantity}" class="quantity-input" data-line-id="${line.id}" />
-              <button type="button" class="qty-increase" data-line-id="${line.id}" aria-label="Aantal verhogen voor ${line.merchandise.product.title}">+</button>
+          <li class="cart-item">
+            ${line.merchandise.image ? `
+              <img
+                src="${line.merchandise.image.url}"
+                alt="${line.merchandise.image.altText ?? line.merchandise.product.title}"
+                width="96" height="96"
+                class="cart-item-image"
+              >
+            ` : `
+              <div class="cart-item-image product-image-placeholder" role="img" aria-label="Geen afbeelding beschikbaar">?</div>
+            `}
+            <div class="cart-item-details">
+              <p>${line.merchandise.product.title} — ${line.merchandise.title}</p>
+              <p>${formatter.format(line.merchandise.price.amount)}</p>
+              <p>${line.cost.totalAmount.amount} ${line.cost.totalAmount.currencyCode}</p>
+              <div class="quantity-control">
+                <label class="visually-hidden" for="qty-${line.id}">Aantal voor ${line.merchandise.product.title}</label>
+                <button type="button" class="qty-decrease" data-line-id="${line.id}" aria-label="Aantal verlagen voor ${line.merchandise.product.title}">&minus;</button>
+                <input type="number" id="qty-${line.id}" min="0" value="${line.quantity}" class="quantity-input" data-line-id="${line.id}" />
+                <button type="button" class="qty-increase" data-line-id="${line.id}" aria-label="Aantal verhogen voor ${line.merchandise.product.title}">+</button>
+              </div>
+              <button class="remove-button" data-line-id="${line.id}">Verwijderen</button>
             </div>
-            <button class="remove-button" data-line-id="${line.id}">Verwijderen</button>
           </li>
         `).join('')}
       </ul>
@@ -130,3 +153,126 @@ import Layout from '../layouts/layout.astro';
 
   renderCart();
 </script>
+
+<style is:global>
+  @media (min-width: 768px) {
+    .cart-layout {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: var(--space-8);
+      align-items: start;
+    }
+  }
+
+  .cart-list {
+    list-style: none;
+  }
+
+  .cart-item {
+    display: flex;
+    gap: var(--space-4);
+    padding: var(--space-4) 0;
+    border-bottom: var(--border-width) solid var(--color-border);
+  }
+
+  .cart-item-image {
+    width: 6rem;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    background-color: var(--color-surface);
+    flex-shrink: 0;
+  }
+
+  .cart-item-details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+    .quantity-control {
+    display: inline-flex;
+    align-items: center;
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--border-radius-sm);
+    width: fit-content;
+  }
+
+  .qty-decrease,
+  .qty-increase {
+    background: none;
+    border: none;
+    width: 2.25rem;
+    height: 2.25rem;
+    font-size: var(--font-size-body);
+    cursor: pointer;
+  }
+
+  .quantity-input {
+    width: 2.5rem;
+    border: none;
+    text-align: center;
+  }
+
+  .quantity-input::-webkit-inner-spin-button,
+  .quantity-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .remove-button {
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--color-muted);
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+    font-size: var(--font-size-muted);
+    cursor: pointer;
+    align-self: flex-start;
+  }
+
+  .remove-button:hover {
+    color: var(--color-accent-hover);
+  }
+
+  .summary-rows {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--space-2) var(--space-4);
+    font-size: var(--font-size-muted);
+    color: var(--color-muted);
+  }
+
+  .order-summary {
+    background-color: var(--color-surface);
+    border-radius: var(--border-radius-md);
+    padding: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .summary-total {
+    display: flex;
+    justify-content: space-between;
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-heading-xs);
+    padding-top: var(--space-4);
+    border-top: var(--border-width) solid var(--color-border);
+  }
+
+  .checkout-button {
+    display: block;
+    text-align: center;
+    background-color: var(--color-accent);
+    color: var(--color-white);
+    padding: var(--space-3);
+    border-radius: var(--border-radius-sm);
+    text-decoration: none;
+    font-weight: var(--font-weight-medium);
+  }
+
+  .checkout-button:hover {
+    background-color: var(--color-accent-hover);
+  }
+</style>

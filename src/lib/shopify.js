@@ -18,6 +18,7 @@ async function shopifyFetch(query, variables = {}) {
 
   const json = await response.json();
 
+  // fout in geparsede json of graphql fout in heeft gestopt (wel ontvangen maar wel fout in json)
   if (json.errors) {
     throw new Error(`Shopify GraphQL fout: ${JSON.stringify(json.errors)}`);
   }
@@ -49,6 +50,8 @@ export async function getAllProducts() {
 }
 
 export async function createCart(merchandiseId, quantity = 1) {
+  // kondigt aan: deze schrijfactie heeft een lijst met cart regels nodig, genaamd $lines
+  // roept Shopify's cart aanmaak actie aan, met $lines als de input
   const query = `
     mutation CreateCart($lines: [CartLineInput!]!) {
       cartCreate(input: { lines: $lines }) {

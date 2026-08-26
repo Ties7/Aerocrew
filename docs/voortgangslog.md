@@ -20,7 +20,10 @@ Logboek van gebouwde functionaliteit, gebaseerd op de echte issue en PR geschied
 - Cart winkelwagenpagina met aanpassen/verwijderen en checkout gebouwd (issue #19 / PR #20). End to end getest met een echte testbetaling via Shopify's Bogus Gateway, bevestigd zowel op de eigen bevestigingspagina als in Shopify's eigen bestellingenoverzicht.
 - PR #20 gereviewd en gemerged door Matthijs, met inline toelichting op eigen keuzes (removeCartLine vs updateCartLine, bewuste volledige cart refetch).
 
-## 22 augustus — vandaag
+## 22 augustus
 - Projectboard opgeschoond.
 - Matthijs stelt een vaste issue conventie voor (user story / acceptatiecriteria / definition of done) als GitHub issue templates: gecontroleerd, goedgekeurd en gemerged (PR #21).
 - Los overleg opgestart met opdrachtgever Justin (zie overleg-log.md) om ook zelf direct contact te documenteren, naast de eerder geplande tussentijdse/eindreview met Matthijs als aanspreekpunt.
+
+## 23 Augustus
+- Ties vroeg aan Matthijs voor het winkelwagen design, Matthijs heeft deze toen gemaakt voor Ties gemaakt in de Figma.

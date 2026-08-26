@@ -1,0 +1,90 @@
+# Terugblik samenwerking, Aerocrew
+
+Datum: 26/08/2026
+Aanwezig: Matthijs, Ties
+
+**Hoe we dit doen:** we vullen deel 1 eerst allebei apart in, vijf minuten, zonder te overleggen. Daarna leggen we het naast elkaar en doen we deel 2 en 3 samen.
+
+**Waarom apart eerst:** als we meteen samen gaan praten, wordt het één verhaal en verdwijnt het verschil in hoe we het beleefd hebben. Juist dat verschil is het interessante.
+
+**Eén afspraak vooraf:** een terugblik waarin alles goed ging is geen terugblik. We hebben allebei minstens één ding dat niet lekker liep. Dat opschrijven is het punt van deze oefening, niet iets waar we omheen werken.
+
+---
+
+## Deel 1, apart invullen
+
+### Matthijs
+
+**1. Wat in onze manier van werken heeft me tijd of gedoe bespaard?**
+Noem iets concreets, niet "de communicatie ging goed".
+
+_..._
+
+**2. Wat heeft me tijd of gedoe gekóst?**
+Waar moest ik wachten, iets navragen, of iets overdoen?
+
+_..._
+
+**3. Wanneer wist ik niet waar de ander mee bezig was?**
+En had ik dat kunnen weten als ik ergens had gekeken?
+
+_..._
+
+**4. Wat heb ik onderweg aangepast in hoe we werken, en werkte dat?**
+
+_..._
+
+**5. Wat heb ik gedacht maar niet gezegd?**
+
+_..._
+
+### Ties
+
+Zelfde vijf vragen.
+
+_..._
+
+---
+
+## Deel 2, samen bespreken
+
+Loop de antwoorden langs en zoek de plekken waar ze verschillen. Bespreek daarna deze vier momenten uit het project. Per moment: wat gebeurde er, wat leverde het op, en zouden we het weer zo doen?
+
+**De issue-conventie (20 en 21 augustus).**
+Matthijs kon een issue van Ties niet zonder overleg oppakken, stelde een vaste opbouw voor, Ties bracht de nuance in dat het alleen voor nieuwe issues moest gelden, en het werd omgezet in templates.
+Vragen: heeft het daarna echt gescheeld, of was het vooral netter? En waarom is dit pas halverwege gebeurd?
+
+**De ziekmelding (19 augustus).**
+Matthijs pauzeerde met coderen maar bleef reviewen, Ties bouwde door.
+Vragen: was reviewen het juiste om vast te houden? Wat zou er zijn gebeurd als het langer had geduurd?
+
+**De reviews.**
+Bij PR #15 gingen drie punten heen en weer voordat het gemerged werd.
+Vragen: voelde dat als vertraging of als winst? Is er ook een keer iets doorgeglipt omdat een review te snel ging?
+
+**Eén aanspreekpunt richting Justin.**
+Afgesproken in de debriefing: alle communicatie loopt via Matthijs.
+Vragen: heeft dat gewerkt, of raakte Ties daardoor te ver van de opdrachtgever af? Ties heeft op 22 augustus zelf contact opgestart, waarom?
+
+---
+
+## Deel 3, wat we eruit halen
+
+**Wat we houden**
+
+_..._
+
+**Wat we anders zouden doen als we hier opnieuw aan begonnen**
+
+_..._
+
+**Wat we voor de rest van dit project nog aanpassen**
+Alleen dingen die we deze week echt nog kunnen doen.
+
+_..._
+
+**Wat we allebei meenemen naar een volgend project**
+
+Matthijs: _..._
+
+Ties: _..._

@@ -48,4 +48,3 @@ moment nog niet; de publicatiestap blijft daarom voorlopig handmatig en we
 komen hierop terug zodra hij actief producten gaat toevoegen. Toegelicht
 dat de checkoutschermen nu alleen de flow tonen en niet de uiteindelijke
 vormgeving; die staat in het design.
-**Besluit:** samenvatting + vraag over de aankoopflow per mail nagestuurd (aankoopflow kwam niet aan bod in dit overleg), vervolgoverleg gepland.

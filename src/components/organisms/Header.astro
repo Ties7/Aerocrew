@@ -1,0 +1,212 @@
+---
+const currentPath = Astro.url.pathname;
+
+const navLinks = [
+  { href: '/products/nieuw', label: 'Nieuw' },
+  { href: '/products/hoodiesensweaters', label: 'Hoodies & Sweaters' },
+  { href: '/products/polosenshirts', label: 'Polos & Shirts' },
+  { href: '/products/caps', label: 'Caps' },
+  { href: '/products/accessoires', label: 'Accessoires' },
+  { href: '/over', label: 'Over' },
+];
+---
+
+<header>
+  <nav>
+      <details class="nav-mobile">
+            <summary class="hamburger" aria-label="Menu openen">
+                <span class="bar" aria-hidden="true"></span>
+                <span class="bar" aria-hidden="true"></span>
+                <span class="bar" aria-hidden="true"></span>
+            </summary>
+            <ul class="nav-list-mobile">
+                {navLinks.map((link) => (
+                    <li class="nav-item">
+                        <a
+                            href={link.href}
+                            class={`nav-link ${currentPath === link.href ? 'active' : ''}`}
+                        >
+                            {link.label}
+                        </a>
+                    </li>
+                ))}
+            </ul>
+      </details>
+
+      <a href="/" class="logo-link">
+        <img class="logo" src="/aerocrew_logo1.png" alt="Aerocrew logo" />
+      </a>
+
+      <ul class="nav-list-desktop">
+          {navLinks.map((link) => (
+              <li class="nav-item">
+                  <a href={link.href} class={`nav-link ${currentPath === link.href ? 'active' : ''}`}>
+                      {link.label}
+                  </a>
+              </li>
+          ))}
+      </ul>
+
+      <div class="nav-icons">
+        <a href="/zoeken" class="extra-link">
+          <i class="fa-solid fa-magnifying-glass search-icon" aria-hidden="true"></i>
+        </a>
+        <a href="/cart" class="extra-link">
+          <i class="fa-solid fa-cart-shopping cart-icon" aria-hidden="true"></i>
+        </a>
+      </div>
+  </nav>
+
+</header>
+
+<style>
+  header {
+    background-color: var(--color-main);
+    position: sticky;
+    top: 0;
+    z-index: var(--z-header);
+    padding-inline: var(--space-4);
+    font-family: var(--font-primary);
+  }
+
+  nav {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    grid-template-areas: "hamburger logo icons";
+    align-items: center;
+    padding-block: var(--space-4);
+    position: relative;
+  }
+
+  .nav-mobile {
+    grid-area: hamburger;
+    justify-self: start;
+  }
+
+  .logo-link {
+    grid-area: logo;
+    justify-self: center;
+  }
+
+  .logo {
+    width: clamp(100px, 40vw, 230px);
+    height: auto;
+  }
+
+  .nav-icons {
+    grid-area: icons;
+    font-size: var(--font-size-heading-s);
+    color: var(--color-title);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    justify-self: end;
+  }
+
+  .extra-link {
+    display: flex;
+    align-items: center;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  /* Desktop-navigatie: verborgen op mobiel, de mobiele versie zit in .nav-mobile */
+  .nav-list-desktop {
+    display: none;
+    list-style: none;
+    font-size: var(--font-size-heading-xs);
+  }
+
+  .nav-list-mobile {
+    list-style: none;
+  }
+
+  /* Alleen tonen zodra <details> open staat; anders wint een gewone author-regel
+     hier altijd van de UA-regel die de inhoud verbergt, ongeacht specificiteit. */
+  .nav-mobile[open] .nav-list-mobile {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    inset: 0;
+    height: 100vh;
+    background-color: var(--color-white);
+    padding: var(--space-16) var(--space-4) var(--space-4) var(--space-4);
+    gap: var(--space-4);
+    overflow-y: auto;
+    z-index: 150;
+  }
+
+  .nav-mobile[open] .nav-list-mobile .nav-link {
+    font-size: var(--font-size-heading-m);
+  }
+
+  @media (min-width: 800px) {
+    .nav-mobile {
+      display: none;
+    }
+
+    nav {
+      grid-template-areas: "logo navlist icons";
+    }
+
+    .logo-link {
+      justify-self: start;
+    }
+
+    .logo {
+      width: clamp(120px, 8vw, 160px);
+    }
+
+    .nav-list-desktop {
+      grid-area: navlist;
+      display: flex;
+      flex-direction: row;
+      gap: var(--space-4);
+    }
+  }
+
+  .hamburger {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    cursor: pointer;
+    list-style: none;
+    position: relative;
+    z-index: 200;
+  }
+
+  .hamburger::-webkit-details-marker {
+    display: none;
+  }
+
+  .bar {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background-color: var(--color-title);
+    transition: transform 0.25s ease, opacity 0.25s ease;
+    transform-origin: center;
+  }
+
+  .nav-link {
+    color: var(--color-title);
+    text-decoration: none;
+    font-weight: var(--font-weight-medium);
+  }
+
+  .nav-link:hover,
+  .nav-link.active {
+    text-decoration: underline;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bar {
+      transition: none;
+    }
+  }
+
+  details[open] .bar:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  details[open] .bar:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  details[open] .bar:nth-child(3) { transform: translateY(-5px) rotate(-45deg); }
+</style>

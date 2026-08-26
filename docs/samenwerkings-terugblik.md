@@ -16,35 +16,48 @@ Aanwezig: Matthijs, Ties
 ### Matthijs
 
 **1. Wat in onze manier van werken heeft me tijd of gedoe bespaard?**
-Noem iets concreets, niet "de communicatie ging goed".
 
-_..._
+Het efficiente werken met de issues en concrete communicatie door teams. Omdat we de issues en project board goed haddenm ingericht konden we makkelijk werken in github zelf en was er weinig te vertellen via teams, behalve een vraag of iemand iets wou checken of maken.
 
 **2. Wat heeft me tijd of gedoe gekóst?**
 Waar moest ik wachten, iets navragen, of iets overdoen?
 
-_..._
+Ik denk soms wachten op een PR, maar dat is opzich niet erg, er stond genoeg op het project board dus dat pakte ik dan gelijk op.
 
 **3. Wanneer wist ik niet waar de ander mee bezig was?**
 En had ik dat kunnen weten als ik ergens had gekeken?
 
-_..._
+Had ik niet eigenlijk, door mijn wijziging in de issues kon ik en zien hoe ver een issue al was, of via de roadmap kijken wat er vandaag aan de gang was. Dit was echt super duidelijk.
 
 **4. Wat heb ik onderweg aangepast in hoe we werken, en werkte dat?**
 
-_..._
+Ja wat ik zei, ik heb de wijziging van hoe we issues opmaken en zo dus ook de PR's opmaken veranderd. Dat hielp echt heel goed voor mijzelf, omdat als ik een duidelijk doel zie wat ik kan afvinken werkt dat beter voor mij.
 
 **5. Wat heb ik gedacht maar niet gezegd?**
 
-_..._
+Ik vond het vervelend dat ik niet verder kon werken aan het project omdat ik zo ziek was en ties wel gewoon die PR's bleef doorzetten. Ik heb mijn best gedaan deze toch te reviewen voor hem en dat is ook wel gelukt, maar daardoor loop ik wel iets achter.
 
 ### Ties
 
-Zelfde vijf vragen.
+**1. Wat in onze manier van werken heeft me tijd of gedoe bespaard?**
 
-_..._
+...
 
----
+**2. Wat heeft me tijd of gedoe gekóst?**
+
+...
+
+**3. Wanneer wist ik niet waar de ander mee bezig was?**
+
+...
+
+**4. Wat heb ik onderweg aangepast in hoe we werken, en werkte dat?**
+
+...
+
+**5. Wat heb ik gedacht maar niet gezegd?**
+
+...
 
 ## Deel 2, samen bespreken
 

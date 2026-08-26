@@ -35,11 +35,13 @@ Log van overleggen met teamgenoot en opdrachtgever: datum, aanwezigen, besproken
 
 ## Woensdag 26 augustus 2026, 11:00 Justin (opdrachtgever)
 **Aanwezig:** Justin, Matthijs, Ties
+
 **Besproken:** demo van de volledige aankoopflow, van productoverzicht tot
 afrekenen, met de testbestelling zichtbaar in Shopify onder Bestellingen.
 Vormgevingsrichting voorgelegd. Drie vragen gesteld: klopt de richting van
 de vormgeving, hoe vaak voegt hij producten toe, en wil hij zelf teksten
 kunnen beheren. Justin vroeg naar de vormgeving van de checkoutschermen.
+
 **Besluit:** akkoord op de vormgevingsrichting, komt overeen met hoe hij het
 voor zich zag. Producten toevoegen en zelf teksten beheren spelen op dit
 moment nog niet; de publicatiestap blijft daarom voorlopig handmatig en we

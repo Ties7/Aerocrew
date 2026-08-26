@@ -2,7 +2,7 @@
 
 Headless webshop voor Aerocrew, gebouwd met Astro en de Shopify Storefront API. Van productoverzicht tot afgeronde betaling.
 
-**Live:** [LINK NAAR LIVE OMGEVING]
+**Live:** [https://aerocrew.vercel.app/]
 
 ---
 

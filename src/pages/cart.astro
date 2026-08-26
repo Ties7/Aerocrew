@@ -4,6 +4,8 @@ import Layout from '../layouts/layout.astro';
 <Layout title="Winkelwagen">
   <h1>Winkelwagen</h1>
 
+  <p id="cart-feedback" role="status" class="visually-hidden"></p>
+
   <div class="cart-layout">
     <div id="cart-content">
       <p>Winkelwagen wordt geladen...</p>
@@ -16,14 +18,14 @@ import Layout from '../layouts/layout.astro';
         <dd id="subtotal">&mdash;</dd>
         <dt>Verzending</dt>
         <dd>Gratis</dd>
-        <dt>Waarvan btw (21%)</dt>
+        <dt>Btw</dt>
         <dd id="btw">&mdash;</dd>
       </dl>
       <div class="summary-total">
         <span>Totaal</span>
         <span id="total" aria-live="polite">&mdash;</span>
       </div>
-      <a id="checkout-link" href="#" class="checkout-button">Afrekenen</a>
+      <a id="checkout-link" href="#" class="checkout-button" aria-disabled="true" tabindex="-1">Afrekenen</a>
     </aside>
   </div>
 </Layout>
@@ -32,16 +34,26 @@ import Layout from '../layouts/layout.astro';
   import { getCart, updateCartLine, removeCartLine } from '../lib/shopify.js';
 
   const container = document.getElementById('cart-content');
-  const formatter = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' });
+
+  function formatPrice(money) {
+    return new Intl.NumberFormat('nl-NL', {style: 'currency', currency: money.currencyCode,}).format(money.amount);
+  }
+
+  function showFeedback(message) {
+    document.getElementById('cart-feedback').textContent = message;
+  }
 
   function resetSummary() {
     document.getElementById('subtotal').textContent = '—';
     document.getElementById('btw').textContent = '—';
     document.getElementById('total').textContent = '—';
-    document.getElementById('checkout-link').href = '#';
+    const checkoutLink = document.getElementById('checkout-link');
+    checkoutLink.href = '#';
+    checkoutLink.setAttribute('aria-disabled', 'true');
+    checkoutLink.setAttribute('tabindex', '-1');
   }
 
-  async function renderCart() {
+  async function renderCart(focusedLineId, focusedClass) {
     const cartId = localStorage.getItem('cartId');
 
     if (!cartId) {
@@ -50,7 +62,15 @@ import Layout from '../layouts/layout.astro';
       return;
     }
 
-    const cart = await getCart(cartId);
+    let cart;
+    try {
+      cart = await getCart(cartId);
+    } catch (error) {
+      console.error(error);
+      container.innerHTML = '<p>Winkelwagen kon niet worden geladen. Probeer het later opnieuw.</p>';
+      resetSummary();
+      return;
+    }
 
     if (!cart) {
       localStorage.removeItem('cartId');
@@ -66,7 +86,7 @@ import Layout from '../layouts/layout.astro';
     }
 
     container.innerHTML = `
-      <ul>
+      <ul class="cart-list">
         ${cart.lines.nodes.map((line) => `
           <li class="cart-item">
             ${line.merchandise.image ? `
@@ -83,12 +103,12 @@ import Layout from '../layouts/layout.astro';
             `}
             <div class="cart-item-details">
               <p>${line.merchandise.product.title} — ${line.merchandise.title}</p>
-              <p>${formatter.format(line.merchandise.price.amount)}</p>
-              <p>${line.cost.totalAmount.amount} ${line.cost.totalAmount.currencyCode}</p>
+              <p>${formatPrice(line.merchandise.price)} per stuk</p>
+              <p>Totaal: ${formatPrice(line.cost.totalAmount)}</p>
               <div class="quantity-control">
                 <label class="visually-hidden" for="qty-${line.id}">Aantal voor ${line.merchandise.product.title}</label>
                 <button type="button" class="qty-decrease" data-line-id="${line.id}" aria-label="Aantal verlagen voor ${line.merchandise.product.title}">&minus;</button>
-                <input type="number" id="qty-${line.id}" min="0" value="${line.quantity}" class="quantity-input" data-line-id="${line.id}" />
+                <input type="number" id="qty-${line.id}" value="${line.quantity}" class="quantity-input" data-line-id="${line.id}" />
                 <button type="button" class="qty-increase" data-line-id="${line.id}" aria-label="Aantal verhogen voor ${line.merchandise.product.title}">+</button>
               </div>
               <button class="remove-button" data-line-id="${line.id}">Verwijderen</button>
@@ -98,15 +118,30 @@ import Layout from '../layouts/layout.astro';
       </ul>
     `;
 
-    document.getElementById('subtotal').textContent = formatter.format(cart.cost.subtotalAmount.amount);
-    document.getElementById('btw').textContent = formatter.format(cart.cost.totalTaxAmount?.amount ?? 0);
-    document.getElementById('total').textContent = formatter.format(cart.cost.totalAmount.amount);
-    document.getElementById('checkout-link').href = cart.checkoutUrl;
+    document.getElementById('subtotal').textContent = formatPrice(cart.cost.subtotalAmount);
+    document.getElementById('btw').textContent = cart.cost.totalTaxAmount
+      ? formatPrice(cart.cost.totalTaxAmount)
+      : formatPrice({ amount: 0, currencyCode: cart.cost.totalAmount.currencyCode });
+    document.getElementById('total').textContent = formatPrice(cart.cost.totalAmount);
+
+    const checkoutLink = document.getElementById('checkout-link');
+    checkoutLink.href = cart.checkoutUrl;
+    checkoutLink.removeAttribute('aria-disabled');
+    checkoutLink.removeAttribute('tabindex');
 
     attachEventListeners(cartId);
+
+    if (focusedLineId && focusedClass) {
+      const restored = document.querySelector(`.${focusedClass}[data-line-id="${focusedLineId}"]`);
+      restored?.focus();
+    }
   }
 
   async function changeQuantity(cartId, lineId, quantity) {
+    const focusedElement = document.activeElement;
+    const focusedClass = focusedElement.classList[0];
+    const focusedLineId = focusedElement.dataset.lineId;
+
     const controls = document.querySelectorAll(`[data-line-id="${lineId}"]`);
     controls.forEach((control) => { control.disabled = true; });
 
@@ -116,7 +151,10 @@ import Layout from '../layouts/layout.astro';
       } else {
         await updateCartLine(cartId, lineId, quantity);
       }
-      renderCart();
+      renderCart(focusedLineId, focusedClass);
+    } catch (error) {
+      console.error(error);
+      showFeedback('Aanpassen van de winkelwagen is niet gelukt. Probeer het opnieuw.');
     } finally {
       controls.forEach((control) => { control.disabled = false; });
     }
@@ -177,24 +215,20 @@ import Layout from '../layouts/layout.astro';
     }
   }
 
-  .cart-list {
-    list-style: none;
-  }
-
   #cart-content {
     container-type: inline-size;
   }
 
   .cart-item {
     display: flex;
+    flex-direction: column;
     gap: var(--space-4);
     padding: var(--space-4) 0;
     border-bottom: var(--border-width) solid var(--color-border);
   }
-
-  @container (max-width: 400px) {
+  @container (min-width: 400px) {
     .cart-item {
-      flex-direction: column;
+      flex-direction: row;
     }
   }
 
@@ -204,6 +238,7 @@ import Layout from '../layouts/layout.astro';
     object-fit: cover;
     background-color: var(--color-surface);
     flex-shrink: 0;
+    align-self: flex-start;
   }
 
   .cart-item-details {
@@ -212,7 +247,7 @@ import Layout from '../layouts/layout.astro';
     gap: var(--space-2);
   }
 
-    .quantity-control {
+  .quantity-control {
     display: inline-flex;
     align-items: center;
     border: var(--border-width) solid var(--color-border);
@@ -297,5 +332,11 @@ import Layout from '../layouts/layout.astro';
 
   .checkout-button:hover {
     background-color: var(--color-accent-hover);
+  }
+
+  .checkout-button[aria-disabled="true"] {
+    pointer-events: none;
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 </style>

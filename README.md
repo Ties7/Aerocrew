@@ -47,7 +47,7 @@ Het team werkte samen via een feature branch workflow op GitHub. Per feature wer
 | **[Shopify Storefront API](https://shopify.dev/docs/api/storefront)** (2025-01) | Producten, varianten, winkelwagen en checkout | Geeft volledige vrijheid over de HTML terwijl productbeheer, voorraad en betalingen in Shopify blijven. De opdrachtgever hoeft zijn workflow niet te veranderen. |
 | **GraphQL** | Datacommunicatie met Shopify | We vragen per pagina precies de velden op die we nodig hebben, in plaats van complete productobjecten binnen te halen. |
 | **JavaScript** | Winkelwagen-interactie | De winkelwagen is de enige interactieve laag. Een framework zou meer JavaScript kosten dan de functionaliteit rechtvaardigt. |
-| **CSS** | Styling | Globale reset en basisstijl in `global.css`, de rest in component-scoped `<style>` blokken zodat stijl niet onbedoeld uitlekt. |
+| **CSS** | Styling | Globale reset en basisstijl in `stylesheet.css`, de rest in component-scoped `<style>` blokken zodat stijl niet onbedoeld uitlekt. |
 | **`localStorage`** | Onthouden van het cart-ID | De winkelwagen blijft bestaan tussen paginabezoeken zonder dat we sessies server-side hoeven bij te houden. |
 
 ---
@@ -69,7 +69,7 @@ Alle API-aanroepen lopen door één `shopifyFetch()`-functie, zodat headers en f
 ├── public/                       # Statische assets (favicon, afbeeldingen)
 ├── src/
 │   ├── layouts/
-│   │   └── layout.astro          # Root layout: <head>, navigatie, global.css
+│   │   └── layout.astro          # Root layout: <head>, navigatie, stylesheet.css
 │   ├── lib/
 │   │   └── shopify.js            # Storefront API client + alle queries
 │   ├── pages/
@@ -79,7 +79,7 @@ Alle API-aanroepen lopen door één `shopifyFetch()`-functie, zodat headers en f
 │   │       ├── index.astro       # Productoverzicht
 │   │       └── [handle].astro    # Productdetailpagina
 │   └── styles/
-│       └── global.css            # Reset & basisstijl
+│       └── stylesheet.css            # Reset & basisstijl
 ├── .env.example
 ├── astro.config.mjs
 ├── tsconfig.json
@@ -158,8 +158,6 @@ async function shopifyFetch(query, variables = {}) {
 - Ontbrekende afbeeldingen worden een placeholder met `role="img"` en `aria-label` in plaats van een leeg blok
 - Formuliervelden in de winkelwagen zijn gekoppeld aan een `<label>`
 - Uitverkochte varianten zijn zichtbaar uitgeschakeld, niet alleen visueel grijs
-
-De volledige toegankelijkheidstest staat in [KOMT NOG].
 
 ---
 
@@ -245,11 +243,4 @@ De briefing en debriefing met de opdrachtgever zijn vastgelegd in [issue #1](htt
 
 De volledige aankoopflow is end-to-end getest met Shopify's Bogus Gateway: product toegevoegd via de detailpagina, aantal aangepast en een regel verwijderd op `/cart`, en de checkout afgerond met een testbetaling. De bevestigde bestelling verschijnt zowel op de bevestigingspagina als in Bestellingen in de Shopify-admin.
 
-| Test | Wat er getest is | Resultaat |
-| :--- | :--- | :--- |
-| Tabtest | Volledige aankoopflow met alleen het toetsenbord | [HIER KOMT LINK, MOET NOG GEMAAKT WORDEN] |
-| Screenreader | Overzicht, detailpagina en winkelwagen met VoiceOver | [HIER KOMT LINK, MOET NOG GEMAAKT WORDEN] |
-| Lighthouse | Performance, toegankelijkheid, best practices en SEO | [HIER KOMT LINK, MOET NOG GEMAAKT WORDEN] |
-| HTML-validatie | Alle pagina's via validator.w3.org | [HIER KOMT LINK, MOET NOG GEMAAKT WORDEN] |
-| Browsertest | Chrome, Safari en Firefox | [HIER KOMT LINK, MOET NOG GEMAAKT WORDEN] |
-| Gebruikerstest | Aankoopflow met testgebruikers | [HIER KOMT LINK, MOET NOG GEMAAKT WORDEN] |
+Alle frontend testen zijn te vinden per issue.

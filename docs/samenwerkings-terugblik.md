@@ -41,23 +41,24 @@ Ik vond het vervelend dat ik niet verder kon werken aan het project omdat ik zo 
 
 **1. Wat in onze manier van werken heeft me tijd of gedoe bespaard?**
 
-...
+Ik denk het vanaf begin al bespreken hoe we te werk gingen. Dit keer was dat nog uitgebreider, omdat we voor een herksing werken. Dit deden we door duidelijke issues met volledige beschrijvingen, een heel duidelijk en volledig projectboard met prioritering, roadmap, weight etc.., pull request duidelijk beschrijven.
+Hierdoor was er weinig onduidelijkheid in github wat bij mij in het verleden door al deze dingen wel zorgde.
 
 **2. Wat heeft me tijd of gedoe gekóst?**
 
-...
+Het wachten op pull requests die gereviewd worden heeft het meeste tijd gekost. Ook het onderzoek doen naar hoe shopify werkt, omdat dit voor mij totaal nieuw was.
 
 **3. Wanneer wist ik niet waar de ander mee bezig was?**
 
-...
+Hmm nou als we dingen buiten github documentatie deden dan bespraken we dat via app of teams dus eigenlijk niet.
 
 **4. Wat heb ik onderweg aangepast in hoe we werken, en werkte dat?**
 
-...
+Het toepassen van de issue opmaak waar Matthijs mee kwam, verder ben ik eigenlijk vanaf het begin al goed bezig geweest met alles.
 
 **5. Wat heb ik gedacht maar niet gezegd?**
 
-...
+Niks eigenlijk, anders had ik dat namelijk wel gedaan.
 
 ## Deel 2, samen bespreken
 

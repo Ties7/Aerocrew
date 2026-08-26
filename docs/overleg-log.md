@@ -32,8 +32,18 @@ Log van overleggen met teamgenoot en opdrachtgever: datum, aanwezigen, besproken
 
 ## Zaterdag 22 augustus Justin (opdrachtgever)
 **Besproken:** de volledige functionaliteit is af, we gaan nu de frontend volgens het design bouwen. Besproken dat de huidige store een teststore is die later wordt overgezet naar Justin's eigen Shopify omgeving met echte data, en hoe hij zelf een store kan aanmaken en content kan uploaden.
-**Besluit:** samenvatting + vraag over de aankoopflow per mail nagestuurd (aankoopflow kwam niet aan bod in dit overleg), vervolgoverleg gepland.
 
-## Woensdag 26 augustus, 11:00 Justin (opdrachtgever)
-**Besproken:** in te vullen na het overleg
-**Besluit:** in te vullen na het overleg
+## Woensdag 26 augustus 2026, 11:00 Justin (opdrachtgever)
+**Aanwezig:** Justin, Matthijs, Ties
+**Besproken:** demo van de volledige aankoopflow, van productoverzicht tot
+afrekenen, met de testbestelling zichtbaar in Shopify onder Bestellingen.
+Vormgevingsrichting voorgelegd. Drie vragen gesteld: klopt de richting van
+de vormgeving, hoe vaak voegt hij producten toe, en wil hij zelf teksten
+kunnen beheren. Justin vroeg naar de vormgeving van de checkoutschermen.
+**Besluit:** akkoord op de vormgevingsrichting, komt overeen met hoe hij het
+voor zich zag. Producten toevoegen en zelf teksten beheren spelen op dit
+moment nog niet; de publicatiestap blijft daarom voorlopig handmatig en we
+komen hierop terug zodra hij actief producten gaat toevoegen. Toegelicht
+dat de checkoutschermen nu alleen de flow tonen en niet de uiteindelijke
+vormgeving; die staat in het design.
+**Besluit:** samenvatting + vraag over de aankoopflow per mail nagestuurd (aankoopflow kwam niet aan bod in dit overleg), vervolgoverleg gepland.

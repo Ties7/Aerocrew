@@ -27,3 +27,13 @@ Logboek van gebouwde functionaliteit, gebaseerd op de echte issue en PR geschied
 
 ## 23 Augustus
 - Ties vroeg aan Matthijs voor het winkelwagen design, Matthijs heeft deze toen gemaakt voor Ties gemaakt in de Figma.
+
+## 24 Augustus
+- Matthijs heeft stylesheet toegevoegd PR #24.
+
+## 25 Augustus
+- Matthijs heeft header toegevoegd PR #26. Ties gaf feedback dat variabelen uit global.css niet zijn gebruikt. Hierna had matthijs het geimplementeerd en heeft Ties het goedgekeurd.
+
+## 26 Augustus
+- Ties heeft cart styling toegevoegd #27. Matthijs gaf meteen feedback, er waren een aantal dingen nog niet goed: valuta stond hardcoded, fouten zijn onzichtbaar voor bezoeker, afrekenknop actief bij lege winkelwagen en tab focus gaat verloren.
+Ties had dit meteen gefixt en Matthijs heeft het daarna goedgekeurd.

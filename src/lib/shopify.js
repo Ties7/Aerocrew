@@ -18,6 +18,7 @@ async function shopifyFetch(query, variables = {}) {
 
   const json = await response.json();
 
+  // fout in geparsede json of graphql fout in heeft gestopt (wel ontvangen maar wel fout in json)
   if (json.errors) {
     throw new Error(`Shopify GraphQL fout: ${JSON.stringify(json.errors)}`);
   }
@@ -49,6 +50,8 @@ export async function getAllProducts() {
 }
 
 export async function createCart(merchandiseId, quantity = 1) {
+  // kondigt aan: deze schrijfactie heeft een lijst met cart regels nodig, genaamd $lines
+  // roept Shopify's cart aanmaak actie aan, met $lines als de input
   const query = `
     mutation CreateCart($lines: [CartLineInput!]!) {
       cartCreate(input: { lines: $lines }) {
@@ -93,6 +96,12 @@ export async function addCartLine(cartId, merchandiseId, quantity = 1) {
   const data = await shopifyFetch(query, { cartId, lines: [{ merchandiseId, quantity }] });
   const { cart, userErrors } = data.cartLinesAdd;
 
+  const cartdontexist = userErrors.some((e) => e.message.includes('cart does not exist'));
+
+  if (cartdontexist) {
+    return createCart(merchandiseId, quantity);
+  }
+
   if (userErrors.length > 0) {
     throw new Error(userErrors.map((e) => e.message).join(', '));
   }
@@ -108,6 +117,8 @@ export async function getCart(cartId) {
         checkoutUrl
         totalQuantity
         cost {
+          subtotalAmount { amount currencyCode }
+          totalTaxAmount { amount currencyCode }
           totalAmount { amount currencyCode }
         }
         lines(first: 50) {
@@ -118,6 +129,8 @@ export async function getCart(cartId) {
               ... on ProductVariant {
                 id
                 title
+                image { url altText }
+                price { amount currencyCode }
                 product {
                   title
                   handle

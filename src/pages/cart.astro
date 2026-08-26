@@ -3,8 +3,30 @@ import Layout from '../layouts/layout.astro';
 ---
 <Layout title="Winkelwagen">
   <h1>Winkelwagen</h1>
-  <div id="cart-content">
-    <p>Winkelwagen wordt geladen...</p>
+
+  <p id="cart-feedback" role="status" class="visually-hidden"></p>
+
+  <div class="cart-layout">
+    <div id="cart-content">
+      <p>Winkelwagen wordt geladen...</p>
+    </div>
+
+    <aside class="order-summary" aria-label="Bestelling overzicht">
+      <h2>Overzicht</h2>
+      <dl class="summary-rows">
+        <dt>Subtotaal</dt>
+        <dd id="subtotal">&mdash;</dd>
+        <dt>Verzending</dt>
+        <dd>Gratis</dd>
+        <dt>Btw</dt>
+        <dd id="btw">&mdash;</dd>
+      </dl>
+      <div class="summary-total">
+        <span>Totaal</span>
+        <span id="total" aria-live="polite">&mdash;</span>
+      </div>
+      <a id="checkout-link" href="#" class="checkout-button" aria-disabled="true" tabindex="-1">Afrekenen</a>
+    </aside>
   </div>
 </Layout>
 
@@ -13,66 +35,308 @@ import Layout from '../layouts/layout.astro';
 
   const container = document.getElementById('cart-content');
 
-  async function renderCart() {
+  function formatPrice(money) {
+    return new Intl.NumberFormat('nl-NL', {style: 'currency', currency: money.currencyCode,}).format(money.amount);
+  }
+
+  function showFeedback(message) {
+    document.getElementById('cart-feedback').textContent = message;
+  }
+
+  function resetSummary() {
+    document.getElementById('subtotal').textContent = '—';
+    document.getElementById('btw').textContent = '—';
+    document.getElementById('total').textContent = '—';
+    const checkoutLink = document.getElementById('checkout-link');
+    checkoutLink.href = '#';
+    checkoutLink.setAttribute('aria-disabled', 'true');
+    checkoutLink.setAttribute('tabindex', '-1');
+  }
+
+  async function renderCart(focusedLineId, focusedClass) {
     const cartId = localStorage.getItem('cartId');
 
     if (!cartId) {
       container.innerHTML = '<p>Je winkelwagen is leeg.</p>';
+      resetSummary();
       return;
     }
 
-    const cart = await getCart(cartId);
+    let cart;
+    try {
+      cart = await getCart(cartId);
+    } catch (error) {
+      console.error(error);
+      container.innerHTML = '<p>Winkelwagen kon niet worden geladen. Probeer het later opnieuw.</p>';
+      resetSummary();
+      return;
+    }
 
-    if (!cart || cart.lines.nodes.length === 0) {
+    if (!cart) {
+      localStorage.removeItem('cartId');
       container.innerHTML = '<p>Je winkelwagen is leeg.</p>';
+      resetSummary();
+      return;
+    }
+
+    if (cart.lines.nodes.length === 0) {
+      container.innerHTML = '<p>Je winkelwagen is leeg.</p>';
+      resetSummary();
       return;
     }
 
     container.innerHTML = `
-      <ul>
+      <ul class="cart-list">
         ${cart.lines.nodes.map((line) => `
-          <li>
-            <p>${line.merchandise.product.title} — ${line.merchandise.title}</p>
-            <p>${line.cost.totalAmount.amount} ${line.cost.totalAmount.currencyCode}</p>
-            <label>
-              Aantal
-              <input type="number" min="0" value="${line.quantity}" class="quantity-input" data-line-id="${line.id}" />
-            </label>
-            <button class="remove-button" data-line-id="${line.id}">Verwijderen</button>
+          <li class="cart-item">
+            ${line.merchandise.image ? `
+              <img
+                src="${line.merchandise.image.url}"
+                alt="${line.merchandise.image.altText ?? line.merchandise.product.title}"
+                width="96" height="96"
+                loading="lazy"
+                decoding="async"
+                class="cart-item-image"
+              >
+            ` : `
+              <div class="cart-item-image product-image-placeholder" role="img" aria-label="Geen afbeelding beschikbaar">?</div>
+            `}
+            <div class="cart-item-details">
+              <p>${line.merchandise.product.title} — ${line.merchandise.title}</p>
+              <p>${formatPrice(line.merchandise.price)} per stuk</p>
+              <p>Totaal: ${formatPrice(line.cost.totalAmount)}</p>
+              <div class="quantity-control">
+                <label class="visually-hidden" for="qty-${line.id}">Aantal voor ${line.merchandise.product.title}</label>
+                <button type="button" class="qty-decrease" data-line-id="${line.id}" aria-label="Aantal verlagen voor ${line.merchandise.product.title}">&minus;</button>
+                <input type="number" id="qty-${line.id}" value="${line.quantity}" class="quantity-input" data-line-id="${line.id}" />
+                <button type="button" class="qty-increase" data-line-id="${line.id}" aria-label="Aantal verhogen voor ${line.merchandise.product.title}">+</button>
+              </div>
+              <button class="remove-button" data-line-id="${line.id}">Verwijderen</button>
+            </div>
           </li>
         `).join('')}
       </ul>
-      <p>Totaal: ${cart.cost.totalAmount.amount} ${cart.cost.totalAmount.currencyCode}</p>
-      <a href="${cart.checkoutUrl}">Afrekenen</a>
     `;
 
+    document.getElementById('subtotal').textContent = formatPrice(cart.cost.subtotalAmount);
+    document.getElementById('btw').textContent = cart.cost.totalTaxAmount
+      ? formatPrice(cart.cost.totalTaxAmount)
+      : formatPrice({ amount: 0, currencyCode: cart.cost.totalAmount.currencyCode });
+    document.getElementById('total').textContent = formatPrice(cart.cost.totalAmount);
+
+    const checkoutLink = document.getElementById('checkout-link');
+    checkoutLink.href = cart.checkoutUrl;
+    checkoutLink.removeAttribute('aria-disabled');
+    checkoutLink.removeAttribute('tabindex');
+
     attachEventListeners(cartId);
+
+    if (focusedLineId && focusedClass) {
+      const restored = document.querySelector(`.${focusedClass}[data-line-id="${focusedLineId}"]`);
+      restored?.focus();
+    }
+  }
+
+  async function changeQuantity(cartId, lineId, quantity) {
+    const focusedElement = document.activeElement;
+    const focusedClass = focusedElement.classList[0];
+    const focusedLineId = focusedElement.dataset.lineId;
+
+    const controls = document.querySelectorAll(`[data-line-id="${lineId}"]`);
+    controls.forEach((control) => { control.disabled = true; });
+
+    try {
+      if (quantity <= 0) {
+        await removeCartLine(cartId, lineId);
+      } else {
+        await updateCartLine(cartId, lineId, quantity);
+      }
+      renderCart(focusedLineId, focusedClass);
+    } catch (error) {
+      console.error(error);
+      showFeedback('Aanpassen van de winkelwagen is niet gelukt. Probeer het opnieuw.');
+    } finally {
+      controls.forEach((control) => { control.disabled = false; });
+    }
   }
 
   function attachEventListeners(cartId) {
     document.querySelectorAll('.quantity-input').forEach((input) => {
-      input.addEventListener('change', async (event) => {
+      input.addEventListener('change', (event) => {
         const lineId = event.target.dataset.lineId;
         const quantity = Number(event.target.value);
+        changeQuantity(cartId, lineId, quantity);
+      });
+    });
 
-        if (quantity <= 0) {
-          await removeCartLine(cartId, lineId);
-        } else {
-          await updateCartLine(cartId, lineId, quantity);
-        }
+    document.querySelectorAll('.qty-decrease').forEach((button) => {
+      button.addEventListener('click', (event) => {
+        const lineId = event.target.dataset.lineId;
+        const input = document.getElementById(`qty-${lineId}`);
+        const quantity = Number(input.value) - 1;
+        input.value = quantity;
+        changeQuantity(cartId, lineId, quantity);
+      });
+    });
 
-        renderCart();
+    document.querySelectorAll('.qty-increase').forEach((button) => {
+      button.addEventListener('click', (event) => {
+        const lineId = event.target.dataset.lineId;
+        const input = document.getElementById(`qty-${lineId}`);
+        const quantity = Number(input.value) + 1;
+        input.value = quantity;
+        changeQuantity(cartId, lineId, quantity);
       });
     });
 
     document.querySelectorAll('.remove-button').forEach((button) => {
-      button.addEventListener('click', async (event) => {
+      button.addEventListener('click', (event) => {
         const lineId = event.target.dataset.lineId;
-        await removeCartLine(cartId, lineId);
-        renderCart();
+        changeQuantity(cartId, lineId, 0);
       });
     });
   }
 
   renderCart();
 </script>
+
+<style is:global>
+  @media (min-width: 768px) {
+    .cart-layout {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: var(--space-8);
+      align-items: start;
+    }
+
+    .order-summary {
+      position: sticky;
+      top: var(--space-4);
+    }
+  }
+
+  #cart-content {
+    container-type: inline-size;
+  }
+
+  .cart-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    padding: var(--space-4) 0;
+    border-bottom: var(--border-width) solid var(--color-border);
+  }
+  @container (min-width: 400px) {
+    .cart-item {
+      flex-direction: row;
+    }
+  }
+
+  .cart-item-image {
+    width: 6rem;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    background-color: var(--color-surface);
+    flex-shrink: 0;
+    align-self: flex-start;
+  }
+
+  .cart-item-details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .quantity-control {
+    display: inline-flex;
+    align-items: center;
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--border-radius-sm);
+    width: fit-content;
+  }
+
+  .qty-decrease,
+  .qty-increase {
+    background: none;
+    border: none;
+    width: 2.25rem;
+    height: 2.25rem;
+    font-size: var(--font-size-body);
+    cursor: pointer;
+  }
+
+  .quantity-input {
+    width: 2.5rem;
+    border: none;
+    text-align: center;
+  }
+
+  .quantity-input::-webkit-inner-spin-button,
+  .quantity-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .remove-button {
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--color-muted);
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+    font-size: var(--font-size-muted);
+    cursor: pointer;
+    align-self: flex-start;
+  }
+
+  .remove-button:hover {
+    color: var(--color-accent-hover);
+  }
+
+  .summary-rows {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--space-2) var(--space-4);
+    font-size: var(--font-size-muted);
+    color: var(--color-muted);
+  }
+
+  .order-summary {
+    background-color: var(--color-surface);
+    border-radius: var(--border-radius-md);
+    padding: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .summary-total {
+    display: flex;
+    justify-content: space-between;
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-heading-xs);
+    padding-top: var(--space-4);
+    border-top: var(--border-width) solid var(--color-border);
+  }
+
+  .checkout-button {
+    display: block;
+    text-align: center;
+    background-color: var(--color-accent);
+    color: var(--color-white);
+    padding: var(--space-3);
+    border-radius: var(--border-radius-sm);
+    text-decoration: none;
+    font-weight: var(--font-weight-medium);
+  }
+
+  .checkout-button:hover {
+    background-color: var(--color-accent-hover);
+  }
+
+  .checkout-button[aria-disabled="true"] {
+    pointer-events: none;
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+</style>
